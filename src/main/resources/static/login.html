@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>橙子汽车租赁</title>
+    <!-- layui -->
+    <link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css">
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style type="text/css">
+        .main {
+            margin-top: 10%;
+            background-color: white;
+            height: 60%;
+            border-radius: 20px 20px 20px 20px;
+        }
+        
+        body {
+            background: url(image/bg.jpg) no-repeat center 0px;
+            background-position: center 0;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-col-xs4 layui-col-xs-offset4 main">
+        <div align="center" style="font-size: 30px;margin-top: 8%;"><b>登录</b></div>
+        <div class="layui-col-xs10 layui-col-xs-offset1">
+            <form class="layui-form layui-form-pane" lay-filter="author">
+                <div class="layui-form-item" style="margin-top: 8%;margin-bottom: 8%;">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 4%;margin-bottom: 4%;">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="password" lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 4%;margin-bottom: 4%;">
+                    <label class="layui-form-label">记住密码</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="rememberMe" lay-filter="rememberMe" value="1" lay-skin="switch" lay-text="是|否" checked>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 12%;margin-bottom: 2%;">
+                    <div class="layui-col-xs6 layui-col-xs-offset3">
+                        <button style="width: 100%;" lay-submit lay-filter="login" class="layui-btn layui-btn-radius">登录</button>
+                    </div>
+                </div>
+                <div align="right" style="margin-top: 8%;">
+                    <a href="register.html">立即注册</a>
+                    <a href="javascript:;">忘记密码？</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+
+    layui.use(['layer', 'form'], function() {
+        let rememberMe = true;
+        let form = layui.form;
+        let layer = layui.layer;
+        //记住密码后给表单赋值
+        form.val("author", {
+            "username": localStorage.getItem('username'),
+            "password": localStorage.getItem('password')
+        });
+        form.on('switch(rememberMe)', function(data){
+            rememberMe = data.elem.checked;
+        });
+        form.on('submit(login)', function(data) {
+            if (rememberMe){
+                let username = data.field.username;
+                let password = data.field.password;
+                localStorage.setItem('username', username);
+                localStorage.setItem('password', password);
+            }else{
+                localStorage.removeItem('username');
+                localStorage.removeItem('password');
+            }
+            let username = data.field.username;
+            let password = data.field.password;
+            $.post('user/login', {
+                username: username,
+                password: password
+            }, function (res){
+                if(res.code == 200){
+                    location.href = './'
+                }else{
+                    layer.alert('用户名或密码错误')
+                }
+            }, 'json')
+            return false;
+        });
+    })
+</script>
+
+</html>

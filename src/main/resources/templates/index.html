@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>橘子汽车租赁</title>
+    <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+	<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style type="text/css">
+    	.my-title{
+    		position: absolute;
+    		top: 60px;
+    		left: 200px;
+    		right: 0px;
+    		height: 48px;
+			line-height: 48px;
+    		background-color: white;
+    	}
+    	.my-body{
+    		position: absolute;
+    		top: 108px;
+    		left: 200px;
+    		right: 0px;
+    		bottom: 0px;
+    		background-color: #F2F2F2;
+    	}
+	</style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo"><a style="color: white;" href="./">橘子汽车租赁</a></div>
+			<ul class="layui-nav layui-layout-right">
+				<li class="layui-nav-item" lay-unselect><a href="http://www.hbeu.cn/" target="_blank">公司官网</a></li>
+				<li class="layui-nav-item" lay-unselect><a href="http://www.hbeu.cn/" target="_blank">帮助中心</a></li>
+				<li class="layui-nav-item">
+					<a href="javascript:;" th:text="${name}"></a>
+					<dl class="layui-nav-child">
+						<dd>
+							<a href="javascript:;" id="logout">退出</a>
+						</dd>
+					</dl>
+				</li>
+			</ul>
+        </div>
+        <div class="layui-side layui-bg-black">
+        	<div class="layui-side-scroll">
+				<ul class="layui-nav layui-nav-tree" lay-filter="base">
+					<li class="layui-nav-item layui-this"><a layui-id="01" href="javascript:;">主页</a></li>
+					<li class="layui-nav-item"><a layui-id="02" href="javascript:;">客户管理</a></li>
+					<li class="layui-nav-item"><a layui-id="03" href="javascript:;">车辆管理</a></li>
+					<li class="layui-nav-item">
+					    <a href="javascript:;">业务管理</a>
+					    <dl class="layui-nav-child">
+					      <dd><a layui-id="04" href="javascript:;">汽车出租</a></dd>
+					      <dd><a layui-id="05" href="javascript:;">出租单管理</a></dd>
+					      <dd><a layui-id="06" href="javascript:;">汽车入库</a></dd>
+					      <dd><a layui-id="07" href="javascript:;">检查单管理</a></dd>
+					    </dl>
+					</li>
+				</ul>
+				<ul class="layui-nav layui-nav-tree" lay-filter="admin" th:if="${type == 1}">
+					<li class="layui-nav-item">
+					    <a href="javascript:;">系统管理</a>
+					    <dl class="layui-nav-child">
+					      <dd><a layui-id="01" href="javascript:;">菜单管理</a></dd>
+					      <dd><a layui-id="02" href="javascript:;">角色管理</a></dd>
+					      <dd><a layui-id="03" href="javascript:;">用户管理</a></dd>
+					      <dd><a layui-id="04" href="javascript:;">修改密码</a></dd>
+					      <dd><a layui-id="05" href="javascript:;">日志管理</a></dd>
+					      <dd><a layui-id="06" href="javascript:;">系统公告</a></dd>
+					      <dd><a layui-id="07" href="javascript:;">数据源监控</a></dd>
+					    </dl>
+					</li>
+					<li class="layui-nav-item">
+					    <a href="javascript:;">数据统计</a>
+					    <dl class="layui-nav-child">
+					      <dd><a layui-id="08" href="javascript:;">客户地区统计</a></dd>
+					      <dd><a layui-id="09" href="javascript:;">公司年度月份销售额曲线</a></dd>
+					      <dd><a layui-id="10" href="javascript:;">业务员年度销售额柱状图</a></dd>
+					    </dl>
+					</li>
+					<li class="layui-nav-item"><a layui-id="11" href="javascript:;">关于</a></li>
+				</ul>
+			</div>
+		</div>
+        <div class="my-title">
+			<div style="margin-left: 15px;">
+				<span id="title">主页</span>
+			</div>
+		</div>
+        <div class="my-body" style="background-color: #F2F2F2;">
+			<iframe id="body"
+					frameborder=”no”
+					border=”0″
+					marginwidth=”0″
+					marginheight=”0″
+					scrolling=”no”
+					allowtransparency=”yes”
+					src="home" height="100%" width="100%"></iframe>
+        </div>
+    </div>
+    <script type="text/javascript">
+    	//判断是否在iframe中
+    	if (self.frameElement && self.frameElement.tagName == "IFRAME") {
+    	　　 parent.location.reload();
+    	}
+    	dialog = -1;
+	    layui.use(['element', 'layer'], function() {
+	    	if(dialog != -1){
+	    		layer.msg('加载中');
+	    	}
+			let element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+			let layer = layui.layer;
+			element.on('nav(base)', function(elem){
+				var id = $(this).attr('layui-id');
+				if(id == '01'){
+					$("#title").html("主页");
+					$("#body").attr('src', 'home');
+				}else if(id == '02'){
+					$("#title").html("客户管理");
+					$("#body").attr('src', 'customer.html');
+				}else if(id == '03'){
+					$("#title").html("车辆管理");
+					$("#body").attr('src', 'car.html');
+				}else if(id == '04'){
+					$("#title").html("汽车出租");
+					$("#body").attr('src', 'business/rent.html');
+				}else if(id == '05'){
+					$("#title").html("出租单管理");
+					$("#body").attr('src', 'business/rents.html');
+				}
+			});
+			document.getElementById('body').onload = function(){
+				layer.close(dialog);
+				dialog = -1;
+			}
+			$("#logout").on('click', function (){
+				layer.confirm('确认退出？', {icon: 3, title:'提示'}, function(index){
+					location.href = "user/logout";
+					layer.close(index);
+				});
+			})
+		});
+    </script>
+    <script type="text/javascript" th:if="${type == 1}">
+		layui.use(['element', 'layer'], function() {
+			let element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+			let layer = layui.layer;
+			element.on('nav(admin)', function (elem) {
+				let id = $(this).attr('layui-id');
+				let value = $(this).text();
+				layer.msg("id:"+id+",value:"+value);
+			});
+		});
+    </script>
+</body>
+</html>

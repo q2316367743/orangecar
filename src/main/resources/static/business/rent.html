@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>橘子汽车租赁</title>
+    <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+    <script type="text/javascript" charset='utf-8' src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body style="background-color: #F2F2F2">
+<div class="layui-row">
+    <div class="layui-row" style="margin: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-header"><i class="layui-icon layui-icon-search"></i>查询条件</div>
+            <div class="layui-card-body layui-row">
+                <form class="layui-form layui-form-pane layui-col-xs6">
+                    <div class="demoTable">
+                        <label class="layui-form-label">身份证号</label>
+                        <div class="layui-inline">
+                            <input class="layui-input" name="identity" autocomplete="off">
+                        </div>
+                        <button class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="margin-left: 20px;margin-right: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-header">车辆列表</div>
+            <div class="layui-card-body layui-row">
+                <!-- 搜索条件 -->
+                <form class="layui-form layui-form-pane layui-row">
+                    <div class="demoTable">
+                        <label class="layui-form-label">汽车牌照</label>
+                        <div class="layui-inline">
+                            <input class="layui-input" name="number" autocomplete="off">
+                        </div>
+                        <button class="layui-btn" lay-submit lay-filter="searchCar">搜索</button>
+                    </div>
+                </form>
+                <!-- 显示 -->
+                <table id="cars" lay-filter="cars"></table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/html" id="rightBar">
+    <a class="layui-btn layui-btn-xs" lay-event="info">详情</a>
+    <a class="layui-btn layui-btn-xs" lay-event="choose">选择</a>
+</script>
+<script type="text/html" id="rentDialog">
+    <div class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证号</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.identity }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户姓名</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.name }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车辆车牌</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.number }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出租价格</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.rentPrice }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">起租时间</label>
+            <div class="layui-input-block">
+                <input type="text" id="beginTime" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">还车时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="returnTime" class="layui-input" id="returnTime" lay-verify="required">
+            </div>
+        </div>
+    </div>
+</script>
+<!-- 用户信息 -->
+<script type="text/html" id="customerDialog">
+    <div class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证号</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.identity }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.name }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                {{#  if(d.gender === 1){ }}
+                <input type="text" value="男" class="layui-input" disabled>
+                {{#  } else if(d.gender === 2){ }}
+                <input type="text" value="女" class="layui-input" disabled>
+                {{#  } }}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.address }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.phone }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">职位</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.career }}" class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="application/javascript">
+    let addDialog = -1;
+    let isShow = false;
+    let customer = {};
+    layui.use(['layer', 'form', 'table', 'laytpl', 'laydate'], function () {
+        let layer = layui.layer;
+        let form = layui.form;
+        let table = layui.table;
+        let laytpl = layui.laytpl;
+        var laydate = layui.laydate;
+
+        //搜索汽车
+        form.on('submit(searchCar)', function (data){
+            let number = data.field.number;
+            console.log(data.field)
+            if(!isShow){
+                layer.alert('请先选择用户');
+                return false;
+            }
+            table.reload('car', {
+                url: '../car/search/number',
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    number: number
+                }
+            });
+            return false;
+        })
+
+        //查询
+        form.on('submit(search)', function(data){
+            let identity = data.field.identity;
+            $.getJSON('../customer/search/one/identity', {
+                identity: identity
+            }, function (res) {
+                if(res.code == 200){
+                    //用户信息展示
+                    let customerDialog = $('#customerDialog').html();
+                    laytpl(customerDialog).render(res.data, function(html){
+                        layer.open({
+                            type: 1,
+                            area: ['500px', '450px'],
+                            title: '用户信息',
+                            closeBtn: 0,
+                            shadeClose: true,
+                            content: html,
+                            btn: ['确定', '取消'],
+                            yes: function (index){
+                                customer = res.data;
+                                layer.close(index);
+                                if(isShow){
+                                    table.reload('car', {
+                                        url: '../car/search/number',
+                                        page: {
+                                            curr: 1 //重新从第 1 页开始
+                                        },
+                                        where: {
+                                            number: ''
+                                        }
+                                    });
+                                }else{
+                                    isShow = true;
+                                    table.render({
+                                        id: 'car',
+                                        elem: '#cars',
+                                        url: '../car/search/number', //数据接口
+                                        title: '客户数据表',
+                                        page: true, //开启分页
+                                        limit: 9,
+                                        limits: [9, 18, 27, 35, 45, 54],
+                                        defaultToolbar: ['filter', 'print', 'exports'],//工具条
+                                        cols: [ [ //表头
+                                            {field: 'number', title: '车牌号', width:180, sort: true},
+                                            {field: 'brand', title: '品牌', width:120},
+                                            {field: 'color', title: '颜色', width:120},
+                                            {field: 'buyPrice', title: '购买价格', width:120},
+                                            {field: 'rentPrice', title: '出租价格', width:120},
+                                            {field: 'deposit', title: '押金', width:120},
+                                            {field: 'status', title: '状态', width:100, templet: function(d){
+                                                    let status = d.status;
+                                                    switch (status){
+                                                        case 0:
+                                                            return '<span style="color: forestgreen">未出租</span>';
+                                                        case 1:
+                                                            return '<span style="color: red">已出租</span>';
+                                                        default:
+                                                            return '<span style="color: cornflowerblue">未知</span>';
+                                                    }
+                                                }
+                                            },
+                                            {field: 'description', title: '描述'},
+                                            {fixed: 'right', title:'操作', toolbar: '#rightBar', width:150}
+                                        ] ],
+                                        response: {
+                                            statusName: 'code', //规定数据状态的字段名称，默认：code
+                                            statusCode: 200, //规定成功的状态码，默认：0
+                                            msgName: 'message', //规定状态信息的字段名称，默认：msg
+                                            countName: 'total', //规定数据总数的字段名称，默认：count
+                                            dataName: 'record', //规定数据列表的字段名称，默认：data
+                                        }
+                                    });
+
+                                    //监听行工具事件
+                                    table.on('tool(cars)', function(obj){
+                                        var data = obj.data;
+                                        //console.log(obj)
+                                        if(obj.event === 'info'){
+                                            layer.open({
+                                                type: 1,
+                                                title: '汽车图片',
+                                                content: '<img src="http://localhost/' + data.image + '" title="汽车图片">' //这里content是一个普通的String
+                                            });
+                                        }else if(obj.event == 'choose'){
+                                            let rent = {
+                                                identity: customer.identity,
+                                                name: customer.name,
+                                                number: data.number,
+                                                rentPrice: data.rentPrice
+                                            }
+                                            let rentDialog = $('#rentDialog').html();
+                                            laytpl(rentDialog).render(rent, function(html) {
+                                                layer.open({
+                                                    type: 1,
+                                                    area: ['500px', '450px'],
+                                                    title: '车辆出租',
+                                                    closeBtn: 0,
+                                                    shadeClose: true,
+                                                    content: html,
+                                                    btn: ['确定', '取消'],
+                                                    yes: function (index) {
+                                                        layer.close(index);
+                                                        let returnTime = $('#returnTime').val();
+                                                        $.post('../rent/add', {
+                                                            identity: rent.identity,
+                                                            number: rent.number,
+                                                            returnTime: returnTime
+                                                        }, function (res) {
+                                                            if(res.code == 200){
+                                                                layer.msg('添加成功', {
+                                                                    icon: 1
+                                                                });
+                                                            }else if(res.code == 502){
+                                                                layer.msg('汽车已被出租，请重新选择', {
+                                                                    icon: 0
+                                                                });
+                                                            }else if(res.code == 404){
+                                                                layer.msg('汽车未找到，请重新选择', {
+                                                                    icon: 0
+                                                                });
+                                                            }else{
+                                                                layer.msg('服务器异常', {
+                                                                    icon: 0
+                                                                });
+                                                            }
+                                                        });
+                                                    },
+                                                    success: function(layero, index){
+                                                        //执行一个laydate实例
+                                                        laydate.render({
+                                                            elem: '#beginTime', //指定元素
+                                                            value: new Date()
+                                                        });
+                                                        laydate.render({
+                                                            elem: '#returnTime' //指定元素
+                                                        });
+                                                    }
+                                                });
+                                            });
+                                        }
+                                    });
+                                }
+                            },
+                            btn2: function (index) {
+                                layer.close(index)
+                            }
+                        })
+                    });
+                }else if(res.code == 404){
+                    layer.alert("身份证号错误！");
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+    })
+</script>
+</html>
