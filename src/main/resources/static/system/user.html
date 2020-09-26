@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>橘子汽车租赁</title>
+    <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+    <script type="text/javascript" charset='utf-8' src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body style="background-color: #F2F2F2">
+<div class="layui-row">
+    <div class="layui-row" style="margin: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-header">全部用户</div>
+            <div class="layui-card-body layui-row">
+                <!-- 显示 -->
+                <table id="users" lay-filter="users"></table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 表格头部工具栏 -->
+<script type="text/html" id="leftBar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加客户</button>
+    </div>
+</script>
+<!-- 右侧工具栏 -->
+<script type="text/html" id="rightBar">
+    <a class="layui-btn layui-btn-xs" lay-event="update">修改</a>
+    <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
+</script>
+<script type="text/html" id="userDialog">
+    <form class="layui-form layui-form-pane" layui-filter="user">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                {{#  if(d.type === 0){ }}
+                <input type="text" value="{{ d.username }}" class="layui-input">
+                {{#  } else if (d.type === 1){ }}
+                <input type="text" value="{{ d.username }}" class="layui-input" disabled>
+                {{#  } }}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证号</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.identity }}" name="identity" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.name }}" name="name" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                {{#  if(d.gender === 1){ }}
+                <input type="radio" name="gender" value="1" title="男" checked>
+                <input type="radio" name="gender" value="2" title="女">
+                {{#  } else if (d.gender === 2){ }}
+                <input type="radio" name="gender" value="1" title="男">
+                <input type="radio" name="gender" value="2" title="女" checked>
+                {{#  } }}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.address }}" name="address" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.phone }}" name="phone" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">职位</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.position }}" name="position" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {{#  if(d.type === 0){ }}
+                <button class="layui-btn" lay-submit lay-filter="add">新增</button>
+                {{#  } else if (d.type === 1){ }}
+                <button class="layui-btn" lay-submit lay-filter="update"></i>修改</button>
+                {{#  } }}
+                <button type="reset" class="layui-btn layui-btn-primary"><i class="layui-icon layui-icon-refresh"></i>重置</button>
+            </div>
+        </div>
+    </form>
+</script>
+<script type="application/javascript">
+    let addDialog = -1;
+    layui.use(['layer', 'form', 'table', 'laytpl'], function () {
+        let layer = layui.layer;
+        let form = layui.form;
+        let table = layui.table;
+        let laytpl = layui.laytpl;
+        table.render({
+            id: 'user',
+            elem: '#users',
+            url: 'user/all', //数据接口
+            toolbar: '#leftBar',
+            title: '客户数据表',
+            limit: 9,
+            limits: [9, 18, 27, 35, 45, 54],
+            defaultToolbar: ['filter', 'print', 'exports'],//工具条
+            cols: [[ //表头
+                {field: 'username', title: '用户名', width: 180},
+                {field: 'name', title: '姓名', width: 130},
+                {field: 'identity', title: '身份证号', width: 230},
+                {
+                    field: 'gender', title: '性别', width: 80, templet: function (d) {
+                        return d.gender == 1 ? '男' : '女';
+                    }
+                },
+                {field: 'address', title: '地址'},
+                {field: 'phone', title: '电话', width: 180},
+                {field: 'position', title: '职位', width: 80},
+                {fixed: 'right', title:'操作', toolbar: '#rightBar', width:200}
+            ]],
+            response: {
+                statusName: 'code', //规定数据状态的字段名称，默认：code
+                statusCode: 200, //规定成功的状态码，默认：0
+                msgName: 'message', //规定状态信息的字段名称，默认：msg
+                countName: 'total', //规定数据总数的字段名称，默认：count
+                dataName: 'record', //规定数据列表的字段名称，默认：data
+            }
+        });
+        //头工具栏事件
+        table.on('toolbar(users)', function (obj) {
+            //新增数据
+            if (obj.event == 'add') {
+                if (addDialog != -1) {
+                    layer.close(addDialog);
+                }
+                let data = {
+                    username: '',
+                    name: '',
+                    identity: '',
+                    address: '',
+                    phone: '',
+                    position: '',
+                    type: 0,
+                    gender: 1
+                }
+                let userDialog = $('#userDialog').html();
+                laytpl(userDialog).render(data, function(html) {
+                    addDialog = layer.open({
+                        type: 1,
+                        title: '新增用户',
+                        area: ['500px', '500px'],
+                        content: html,
+                        success: function (){
+                            form.render('radio');
+                            form.on('submit(add)', function (data){
+                                console.log(data)
+                            })
+                        }
+                    });
+                });
+            }
+        });
+        //监听行工具事件
+        table.on('tool(users)', function(obj){
+            let data = obj.data;
+            if(obj.event === 'update'){
+                data.type = 1;
+                let userDialog = $('#userDialog').html();
+                laytpl(userDialog).render(data, function(html) {
+                    addDialog = layer.open({
+                        type: 1,
+                        title: '新增用户',
+                        area: ['500px', '500px'],
+                        content: html,
+                        success: function (){
+                            form.render('radio');
+                            form.on('submit(add)', function (data){
+                                console.log(data)
+                            })
+                        }
+                    });
+                });
+            }else{
+                layer.alert('密码重置：' + data.username)
+            }
+        });
+    });
+</script>
+</html>

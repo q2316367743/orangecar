@@ -1,6 +1,9 @@
 package com.qsd.orange.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qsd.orange.po.SysUser;
+
+import java.util.List;
 
 /**
  * @Author Esion
@@ -24,5 +27,9 @@ public interface UserService {
      * @param username 用户名
      * */
     SysUser getInfo(String username);
+    /**
+     * 查询全部用户，不包括管理员
+     * */
+    List<SysUser> all();
 
 }

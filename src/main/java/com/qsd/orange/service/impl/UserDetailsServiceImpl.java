@@ -29,6 +29,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         return new User(username,
                 user.getPassword(),
-                AuthorityUtils.commaSeparatedStringToAuthorityList(user.getType().toString()));
+                AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + user.getType().toString()));
     }
 }

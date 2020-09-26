@@ -29,6 +29,9 @@ public class BusRent implements Serializable {
 	@TableField("return_time")
 	@JsonFormat(pattern="yyyy-MM-dd", timezone="GMT+8")
 	private Date returnTime;
+	@TableField("real_time")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone="GMT+8")
+	private Timestamp realTime;
 	@TableField("rent_status")
 	private Integer rentStatus;
 	@TableField("customer_identity")
@@ -61,6 +64,12 @@ public class BusRent implements Serializable {
 	}
 	public void setReturnTime(Date returnTime) {
 		this.returnTime = returnTime;
+	}
+	public Timestamp getRealTime() {
+		return realTime;
+	}
+	public void setRealTime(Timestamp realTime) {
+		this.realTime = realTime;
 	}
 	public Integer getRentStatus() {
 		return rentStatus;

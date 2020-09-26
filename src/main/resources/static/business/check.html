@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>橘子汽车租赁</title>
+    <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+    <script type="text/javascript" charset='utf-8' src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body style="background-color: #F2F2F2">
+<div class="layui-row">
+    <div class="layui-row" style="margin: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-header"><i class="layui-icon layui-icon-search"></i>查询条件</div>
+            <div class="layui-card-body layui-row">
+                <form class="layui-form layui-form-pane layui-col-xs6">
+                    <div class="demoTable">
+                        <label class="layui-form-label">出租单号</label>
+                        <div class="layui-inline">
+                            <input class="layui-input" name="id" autocomplete="off">
+                        </div>
+                        <button class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="margin-left: 20px;margin-right: 20px;">
+        <!-- 生成检查单 -->
+        <div class="layui-row">
+            <div class="layui-card">
+                <div class="layui-card-header">生成检查单</div>
+                <div class="layui-card-body layui-row">
+                    <form class="layui-form layui-form-pane" lay-filter="check">
+                        <div class="layui-row">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">出租单号</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="number" class="layui-input" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">检查日期</label>
+                                    <div class="layui-input-block">
+                                        <input id="checkTime" type="text" class="layui-input" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row">
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">存在问题</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="problem" class="layui-input" lay-verify="required" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">赔付金额</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="compensate" class="layui-input" lay-verify="required" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">问题描述</label>
+                                <div class="layui-input-block">
+                                    <textarea name="description" required lay-verify="required" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="addCheck">保存</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- 相关信息 -->
+        <div class="layui-row layui-col-space15" id="otherInfo" style="margin: 20px;">
+            <div class="layui-col-xs4">
+                <div class="layui-card">
+                    <div class="layui-card-header">车辆信息</div>
+                    <div class="layui-card-body layui-row">
+                        <div class="layui-form layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">车牌</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="car.number" class="layui-input" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">品牌</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="car.brand" class="layui-input" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">颜色</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="car.color" class="layui-input" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">图片</label>
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" @click="show(car.image)">查看</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs4">
+                <div class="layui-card">
+                    <div class="layui-card-header">出租单信息</div>
+                    <div class="layui-card-body layui-row">
+                        <div class="layui-form layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">单号</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="rent.id" class="layui-input" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">出租价格</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="rent.price" class="layui-input" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">起租时间</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="rent.beginTime" class="layui-input" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">还车时间</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="rent.returnTime" class="layui-input" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs4">
+                <div class="layui-card">
+                    <div class="layui-card-header">客户信息</div>
+                    <div class="layui-card-body layui-row">
+                        <div class="layui-form layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">身份证还</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="customer.identity" class="layui-input" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">姓名</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="customer.name" class="layui-input" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">性别</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-if="customer.gender == 1" value="男" class="layui-input" disabled>
+                                    <input type="text" v-else-if="customer.gender == 2" value="男" class="layui-input" disabled>
+                                    <input type="text" v-else value="未知" class="layui-input" disabled>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">电话</label>
+                                <div class="layui-input-block">
+                                    <input type="text" v-model="customer.phone" class="layui-input" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="application/javascript">
+    let rentId = '';
+    let vue = new Vue({
+        el: '#otherInfo',
+        data: {
+            car: {},
+            rent: {},
+            customer: {}
+        },
+        methods: {
+            show: function (image) {
+                layer.open({
+                    type: 1,
+                    content: '<img src="http://localhost/' + image + '" title="汽车图片">' //这里content是一个普通的String
+                });
+            }
+        }
+    })
+    layui.use(['layer', 'form', 'laydate'], function () {
+        let layer = layui.layer;
+        let form = layui.form;
+        let laydate = layui.laydate;
+        form.on('submit(search)', function (data) {
+            let id = data.field.id;
+            $.getJSON('../rent/info', {
+                id: id
+            }, function (res) {
+                if (res.code == 200){
+                    rentId = id
+                    $("#number").val(id);
+                    laydate.render({
+                        elem: '#checkTime', //指定元素
+                        value: new Date()
+                    });
+                    vue.car = res.data.car;
+                    vue.customer = res.data.customer;
+                    vue.rent = res.data.rent;
+                }else if (res.code == 404){
+                    layer.alert('出租单号错误')
+                }else if (res.code == 506){
+                    layer.alert('车辆已归还')
+                }
+            });
+            return false;
+        });
+        form.val("check", {
+            problem: '无',
+            compensate: 0.0,
+            description: '无'
+        });
+        form.on('submit(addCheck)', function (data) {
+            let problem = data.field.problem;
+            let compensate = data.field.compensate;
+            let description = data.field.description;
+            if(rentId == ''){
+                layer.alert('未填写正确的出租单号');
+                return false;
+            }
+            $.post('../check/add', {
+                id: rentId,
+                problem: problem,
+                compensate: compensate,
+                description: description
+            }, function (res) {
+                if(res.code == 200){
+                    layer.alert('还车成功', function () {
+                        location.reload();
+                    })
+                }else {
+                    layer.alert('服务器错误')
+                }
+            }, 'json');
+            return false;
+        })
+    });
+</script>
+</html>

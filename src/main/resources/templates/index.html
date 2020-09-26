@@ -52,35 +52,34 @@
 					<li class="layui-nav-item">
 					    <a href="javascript:;">业务管理</a>
 					    <dl class="layui-nav-child">
-					      <dd><a layui-id="04" href="javascript:;">汽车出租</a></dd>
-					      <dd><a layui-id="05" href="javascript:;">出租单管理</a></dd>
-					      <dd><a layui-id="06" href="javascript:;">汽车入库</a></dd>
-					      <dd><a layui-id="07" href="javascript:;">检查单管理</a></dd>
+					    	<dd><a layui-id="04" href="javascript:;">汽车出租</a></dd>
+							<dd><a layui-id="05" href="javascript:;">汽车入库</a></dd>
+					     	<dd><a layui-id="06" href="javascript:;">出租单管理</a></dd>
 					    </dl>
 					</li>
-				</ul>
-				<ul class="layui-nav layui-nav-tree" lay-filter="admin" th:if="${type == 1}">
-					<li class="layui-nav-item">
+					<li class="layui-nav-item" th:if="${type == 1}">
 					    <a href="javascript:;">系统管理</a>
 					    <dl class="layui-nav-child">
-					      <dd><a layui-id="01" href="javascript:;">菜单管理</a></dd>
-					      <dd><a layui-id="02" href="javascript:;">角色管理</a></dd>
-					      <dd><a layui-id="03" href="javascript:;">用户管理</a></dd>
-					      <dd><a layui-id="04" href="javascript:;">修改密码</a></dd>
-					      <dd><a layui-id="05" href="javascript:;">日志管理</a></dd>
-					      <dd><a layui-id="06" href="javascript:;">系统公告</a></dd>
-					      <dd><a layui-id="07" href="javascript:;">数据源监控</a></dd>
+							<dd><a layui-id="101" href="javascript:;">客户管理</a></dd>
+							<dd><a layui-id="102" href="javascript:;">车辆管理</a></dd>
+							<dd><a layui-id="103" href="javascript:;">出租单管理</a></dd>
+							<dd><a layui-id="104" href="javascript:;">检查单管理</a></dd>
+							<dd><a layui-id="105" href="javascript:;">用户管理</a></dd>
+							<dd><a layui-id="106" href="javascript:;">修改密码</a></dd>
+							<dd><a layui-id="107" href="javascript:;">日志管理</a></dd>
+							<dd><a layui-id="108" href="javascript:;">系统公告</a></dd>
+							<dd><a layui-id="109" href="javascript:;">数据源监控</a></dd>
 					    </dl>
 					</li>
-					<li class="layui-nav-item">
+					<li class="layui-nav-item" th:if="${type == 1}">
 					    <a href="javascript:;">数据统计</a>
 					    <dl class="layui-nav-child">
-					      <dd><a layui-id="08" href="javascript:;">客户地区统计</a></dd>
-					      <dd><a layui-id="09" href="javascript:;">公司年度月份销售额曲线</a></dd>
-					      <dd><a layui-id="10" href="javascript:;">业务员年度销售额柱状图</a></dd>
+					      <dd><a layui-id="110" href="javascript:;">客户地区统计</a></dd>
+					      <dd><a layui-id="111" href="javascript:;">公司年度月份销售额曲线</a></dd>
+					      <dd><a layui-id="112" href="javascript:;">业务员年度销售额柱状图</a></dd>
 					    </dl>
 					</li>
-					<li class="layui-nav-item"><a layui-id="11" href="javascript:;">关于</a></li>
+					<li class="layui-nav-item"><a layui-id="07" href="javascript:;">关于</a></li>
 				</ul>
 			</div>
 		</div>
@@ -113,6 +112,7 @@
 			let element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
 			let layer = layui.layer;
 			element.on('nav(base)', function(elem){
+				clickElement = elem;
 				var id = $(this).attr('layui-id');
 				if(id == '01'){
 					$("#title").html("主页");
@@ -127,8 +127,26 @@
 					$("#title").html("汽车出租");
 					$("#body").attr('src', 'business/rent.html');
 				}else if(id == '05'){
+					$("#title").html("汽车入库");
+					$("#body").attr('src', 'business/check.html');
+				}else if(id == '06'){
 					$("#title").html("出租单管理");
 					$("#body").attr('src', 'business/rents.html');
+				}else if(id == '101'){
+					$("#title").html("客户管理");
+					$("#body").attr('src', 'system/customer.html');
+				}else if(id == '102'){
+					$("#title").html("车辆管理");
+					$("#body").attr('src', 'system/car.html');
+				}else if(id == '103'){
+					$("#title").html("出租单管理");
+					$("#body").attr('src', 'system/rent.html');
+				}else if(id == '104'){
+					$("#title").html("检查单管理");
+					$("#body").attr('src', 'system/check.html');
+				}else if(id == '105'){
+					$("#title").html("用户管理");
+					$("#body").attr('src', 'system/user.html');
 				}
 			});
 			document.getElementById('body').onload = function(){
@@ -141,17 +159,6 @@
 					layer.close(index);
 				});
 			})
-		});
-    </script>
-    <script type="text/javascript" th:if="${type == 1}">
-		layui.use(['element', 'layer'], function() {
-			let element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
-			let layer = layui.layer;
-			element.on('nav(admin)', function (elem) {
-				let id = $(this).attr('layui-id');
-				let value = $(this).text();
-				layer.msg("id:"+id+",value:"+value);
-			});
 		});
     </script>
 </body>

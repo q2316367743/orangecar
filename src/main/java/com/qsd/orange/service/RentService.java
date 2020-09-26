@@ -3,6 +3,8 @@ package com.qsd.orange.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qsd.orange.po.BusRent;
 
+import java.util.Map;
+
 /**
  * @Author Esion
  * @Date 2020/9/25 16:50
@@ -26,6 +28,21 @@ public interface RentService {
      * @param limit 每页数目
      * */
     IPage<BusRent> all(Integer page, Integer limit);
+    /**
+     * 根据类型搜索出租单
+     * @param page 页码
+     * @param limit 每页数目
+     * @param type 类型
+     * @param keyword 关键字
+     * */
     IPage<BusRent> search(Integer page, Integer limit, String type, String keyword);
+    /**
+     * 修改归还日期
+     * @param id 出租单号
+     * @param returnTime 新归还日期
+     * @return 0：出租单未找到；-1：新归还日期少于开始日期；-2：新归还日期少于今天；1：成功；-3：参数错误
+     * */
+    int updateReturnTime(String id, String returnTime);
+    Map<String, Object> info(String id);
 
 }

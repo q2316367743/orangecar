@@ -49,15 +49,55 @@
 </div>
 </body>
 <script type="text/html" id="rightBar">
-    <a class="layui-btn layui-btn-xs" lay-event="car">汽车详情</a>
-    <a class="layui-btn layui-btn-xs" lay-event="customer">汽车详情</a>
-    <a class="layui-btn layui-btn-xs" lay-event="update">修改</a>
+    <a class="layui-btn layui-btn-xs" lay-event="update">修改归还日期</a>
+</script>
+<script type="text/html" id="rentDialog">
+    <div class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">单号</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.id }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证号</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.customerIdentity }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车辆车牌</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.carNumber }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出租价格</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.price }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">起租时间</label>
+            <div class="layui-input-block">
+                <input type="text" id="beginTime" value="{{ d.beginTime }}" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">还车时间</label>
+            <div class="layui-input-block">
+                <input type="text" id="returnTime" value="{{ d.returnTime }}" class="layui-input">
+            </div>
+        </div>
+    </div>
 </script>
 <script type="application/javascript">
-    layui.use(['table', 'layer', 'form'], function () {
+    layui.use(['table', 'layer', 'form', 'laytpl', 'laydate'], function () {
         let table = layui.table;
         let layer = layui.layer;
         let form = layui.form;
+        let laytpl = layui.laytpl;
+        let laydate = layui.laydate;
         table.render({
             id: 'rents',
             elem: '#rents',
@@ -70,7 +110,7 @@
             defaultToolbar: ['filter', 'print', 'exports'],//工具条
             cols: [ [ //表头
                 {field: 'id', title: '出租表单号', width:280},
-                {field: 'customerIdentity', title: '身份证号', width:120},
+                {field: 'customerIdentity', title: '身份证号', width:220},
                 {field: 'carNumber', title: '车牌号', width:120},
                 {field: 'price', title: '出租价格', width:120, sort: true},
                 {field: 'beginTime', title: '起租时间', width:120, sort: true},
@@ -88,14 +128,63 @@
         //监听行工具事件
         table.on('tool(rents)', function(obj) {
             var data = obj.data;
-            console.log(data);
-            //console.log(obj)
-            if (obj.event === 'car') {
-
-            }else if(obj.event == 'customer'){
-
-            }else if(obj.event == 'update'){
-
+            if (obj.event === 'update') {
+                let rentDialog = $('#rentDialog').html();
+                laytpl(rentDialog).render(data, function(html) {
+                    layer.open({
+                        type: 1,
+                        area: ['500px', '450px'],
+                        title: '出租单号',
+                        closeBtn: 0,
+                        shadeClose: true,
+                        content: html,
+                        btn: ['确定', '取消'],
+                        yes: function (index) {
+                            let initTime = data.returnTime;
+                            let returnTime = $("#returnTime").val();
+                            if(initTime == returnTime){
+                                layer.msg("日期相同，未做修改");
+                                layer.close(index);
+                                return true;
+                            }
+                            $.post('../rent/update/returnTime', {
+                                id: data.id,
+                                returnTime: returnTime
+                            }, function (res) {
+                                if (res.code == 200){
+                                    obj.update({
+                                        returnTime: returnTime
+                                    })
+                                    layer.msg('修改成功', {
+                                        icon: 1
+                                    })
+                                }else if (res.code == 504){
+                                    layer.layer('修改日期解析错误');
+                                }else if (res.code == 505){
+                                    layer.alert("修改日期错误");
+                                }else if (res.code == 404){
+                                    layer.alert("出租单未找到");
+                                }else if (res.code == 500){
+                                    layer.alert('服务器错误')
+                                }
+                            }, 'json');
+                            layer.close(index);
+                            return true;
+                        },
+                        btn2: function (index) {
+                            layer.close(index);
+                        },
+                        success: function () {
+                            laydate.render({
+                                elem: '#beginTime' //指定元素
+                            });
+                            laydate.render({
+                                elem: '#returnTime',
+                                min: new Date().getTime()
+                            });
+                        }
+                    });
+                });
             }
         });
 

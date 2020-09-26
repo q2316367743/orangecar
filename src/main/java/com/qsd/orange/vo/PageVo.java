@@ -29,6 +29,13 @@ public class PageVo<T> extends BaseVo {
         this.total = page.getTotal();
     }
 
+    public PageVo(HttpResult result, List<T> record){
+        super(result);
+        this.record = record;
+        this.current = new Long(1);
+        this.total = new Long(record.size());
+    }
+
     public List<T> getRecord() {
         return record;
     }

@@ -28,7 +28,6 @@ public class BusCheck implements Serializable {
 	private String operator;
 	@TableField("rent_id")
 	private String rentId;
-	private Timestamp created;
 	public String getId() {
 		return id;
 	}
@@ -71,12 +70,6 @@ public class BusCheck implements Serializable {
 	public void setRentId(String rentId) {
 		this.rentId = rentId;
 	}
-	public Timestamp getCreated() {
-		return created;
-	}
-	public void setCreated(Timestamp created) {
-		this.created = created;
-	}
-	
+
 
 }
