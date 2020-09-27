@@ -23,7 +23,7 @@ spring:
         reset-enable: true
         login-username: admin
         login-password: 123456
-        url-pattern: /druid/*
+        url-pattern: /system/datasource/*
       # 配置 StatFilter
       filter:
         stat:

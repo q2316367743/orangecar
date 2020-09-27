@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>橘子汽车租赁</title>
+    <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+    <script type="text/javascript" charset='utf-8' src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body style="background-color: #F2F2F2">
+<div class="layui-row" style="margin: 20px;">
+    <div class="layui-card">
+        <div class="layui-card-header"><i class="layui-icon layui-icon-search"></i>查询条件</div>
+        <div class="layui-card-body layui-row">
+            <form class="layui-form layui-form-pane layui-col-xs6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">关键字</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="keyword" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-form-item" pane>
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="type" autocomplete="off" value="0" title="出租单号" checked>
+                        <input type="radio" name="type" autocomplete="off" value="1" title="身份证号">
+                        <input type="radio" name="type" autocomplete="off" value="2" title="汽车牌照">
+                    </div>
+                </div>
+                <div class="layui-form-item" pane>
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" autocomplete="off" value="0" title="全部" checked>
+                        <input type="radio" name="status" autocomplete="off" value="1" title="已归还">
+                        <input type="radio" name="status" autocomplete="off" value="2" title="未归还">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="search">搜索</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="layui-row">
+    <div class="layui-row" style="margin-left: 20px;margin-right: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-header">出租单管理</div>
+            <div class="layui-card-body layui-row">
+                <table id="rents" lay-filter="rents"></table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="application/javascript">
+    layui.use(['table', 'form'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        table.render({
+            id: 'rents',
+            elem: '#rents',
+            url: 'rent/all', //数据接口
+            title: '客户数据表',
+            page: true, //开启分页
+            limit: 9,
+            limits: [9, 18, 27, 35, 45, 54],
+            toolbar: true,
+            defaultToolbar: ['filter', 'print', 'exports'],//工具条
+            cols: [ [ //表头
+                {field: 'id', title: '出租表单号'},
+                {field: 'customerIdentity', title: '身份证号'},
+                {field: 'carNumber', title: '车牌号', width:120},
+                {field: 'price', title: '出租价格', width:120, sort: true},
+                {field: 'beginTime', title: '起租时间', width:120, sort: true},
+                {field: 'returnTime', title: '还车时间', width:120, sort: true},
+                {field: 'rentStatus', title: '状态', width:120, templet: function(d){
+                        let status = d.rentStatus;
+                        switch (status){
+                            case 0:
+                                return '<span style="color: forestgreen">出租中</span>';
+                            case 1:
+                                return '<span style="color: red">已归还</span>';
+                            default:
+                                return '<span style="color: cornflowerblue">未知</span>';
+                        }
+                    }, sort: true},
+            ] ],
+            response: {
+                statusName: 'code', //规定数据状态的字段名称，默认：code
+                statusCode: 200, //规定成功的状态码，默认：0
+                msgName: 'message', //规定状态信息的字段名称，默认：msg
+                countName: 'total', //规定数据总数的字段名称，默认：count
+                dataName: 'record', //规定数据列表的字段名称，默认：data
+            }
+        });
+
+        form.on('submit(search)', function (data){
+            let keyword = data.field.keyword;
+            let type = data.field.type;
+            let status = data.field.status;
+            table.reload('rents', {
+                url: 'rent/search',
+                where: {
+                    status: status,
+                    type: type,
+                    keyword: keyword
+                },
+                page: {
+                    curr: 1
+                }
+            })
+            return false;
+        })
+    })
+</script>
+</html>

@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * @Author Esion
  * @Date 2020/9/24 7:48
@@ -61,11 +63,16 @@ public class CustomerController {
     }
 
     @PostMapping("add")
-    public BaseVo add(BusCustomer customer, Authentication authentication){
+    public BaseVo add(@Valid BusCustomer customer, Authentication authentication){
         User user = (User)authentication.getPrincipal();
         String username = user.getUsername();
         int insert = customerService.addCustomer(username, customer);
         return new BaseVo(insert > 0 ? HttpResult.SUCCESS : HttpResult.SERVER_ERROR);
+    }
+
+    @PostMapping("update")
+    public BaseVo update(@Valid BusCustomer customer){
+        return new BaseVo(customerService.updateCustomer(customer) > 0 ? HttpResult.SUCCESS : HttpResult.SERVER_ERROR);
     }
 
 }

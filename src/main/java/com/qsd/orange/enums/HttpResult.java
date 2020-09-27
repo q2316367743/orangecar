@@ -13,9 +13,11 @@ public enum HttpResult {
     USERNAME_OR_PASSWORD_ERROR(501, "用户名或密码错误"),
     CAR_IS_RENTING(502, "车辆已被出租"),
     USER_INFO_ERROR(503, "用户信息错误"),
-    PARAM_ERROR(504, "参数类型错误"),
+    PARAM_ERROR(504, "参数错误"),
     DATE_ERROR(505, "参数日期错误"),
-    CAR_IS_RETURN(506, "车辆已归还");
+    CAR_IS_RETURN(506, "车辆已归还"),
+    PARAM_LACK(507, "参数缺少"),
+    PASSWORD_NOT_SAME(508, "新密码与旧密码不能相同");
 
     private Integer code;
     private String message;

@@ -6,9 +6,6 @@
     <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
     <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
     <script type="text/javascript" charset='utf-8' src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- 生产环境版本，优化了尺寸和速度 -->
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-</head>
 <body style="background-color: #F2F2F2">
 <div class="layui-row">
     <div class="layui-row" style="margin: 20px;">
@@ -25,7 +22,7 @@
 <!-- 表格头部工具栏 -->
 <script type="text/html" id="leftBar">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">添加客户</button>
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加用户</button>
     </div>
 </script>
 <!-- 右侧工具栏 -->
@@ -39,9 +36,9 @@
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-block">
                 {{#  if(d.type === 0){ }}
-                <input type="text" value="{{ d.username }}" class="layui-input">
+                <input type="text" name="username" value="{{ d.username }}" class="layui-input">
                 {{#  } else if (d.type === 1){ }}
-                <input type="text" value="{{ d.username }}" class="layui-input" disabled>
+                <input type="text" name="username" value="{{ d.username }}" class="layui-input" disabled>
                 {{#  } }}
             </div>
         </div>
@@ -159,12 +156,33 @@
                     addDialog = layer.open({
                         type: 1,
                         title: '新增用户',
-                        area: ['500px', '500px'],
+                        area: ['500px', '550px'],
                         content: html,
-                        success: function (){
+                        success: function (index){
                             form.render('radio');
                             form.on('submit(add)', function (data){
-                                console.log(data)
+                                let user = {
+                                    username: data.field.username,
+                                    name: data.field.name,
+                                    identity: data.field.identity,
+                                    gender: data.field.gender,
+                                    address: data.field.address,
+                                    phone: data.field.phone,
+                                    position: data.field.position
+                                }
+                                $.post('user/add', user, function (res) {
+                                    if(res.code == 200){
+                                        layer.msg('新增成功，初始密码123456', {
+                                            icon: 1
+                                        })
+                                        layer.close(addDialog);
+                                        addDialog = -1;
+                                        table.reload('user');
+                                    }else {
+                                        layer.alert(res.message)
+                                    }
+                                }, 'json');
+                                return false;
                             })
                         }
                     });
@@ -185,14 +203,53 @@
                         content: html,
                         success: function (){
                             form.render('radio');
-                            form.on('submit(add)', function (data){
-                                console.log(data)
+                            form.on('submit(update)', function (data){
+                                let user = {
+                                    username: data.field.username,
+                                    name: data.field.name,
+                                    identity: data.field.identity,
+                                    gender: data.field.gender,
+                                    address: data.field.address,
+                                    phone: data.field.phone,
+                                    position: data.field.position
+                                }
+                                $.post('user/update', user, function (res) {
+                                    if(res.code == 200){
+                                        layer.msg('修改成功', {
+                                            icon: 1
+                                        })
+                                        layer.close(addDialog);
+                                        addDialog = -1;
+                                        obj.update(user)
+                                    }else {
+                                        layer.alert(res.message)
+                                    }
+                                }, 'json');
+                                return false;
                             })
                         }
                     });
                 });
-            }else{
-                layer.alert('密码重置：' + data.username)
+            }else if (obj.event == 'reset'){
+                layer.confirm('确定重置？', {
+                    icon: 3,
+                    title: '警告'
+                }, function (index) {
+                    $.getJSON('user/reset', {
+                        username: data.username
+                    }, function (res) {
+                        layer.close(index);
+                        if (res.code == 200){
+                            layer.msg('密码重置成功，重置为123456', {
+                                icon: 1
+                            });
+                        }else if (res.code == 500) {
+                            layer.alert('密码重置失败，已是初始密码');
+                        }else{
+                            layer.alert(res.message);
+                        }
+                    })
+                });
             }
         });
     });

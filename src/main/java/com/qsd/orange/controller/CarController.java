@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * @Author Esion
  * @Date 2020/9/24 16:29
@@ -56,7 +58,7 @@ public class CarController {
     }
 
     @PostMapping("add")
-    public BaseVo add(BusCar car, Authentication authentication){
+    public BaseVo add(@Valid BusCar car, Authentication authentication){
         User users = (User)authentication.getPrincipal();
         String username = users.getUsername();
         int add = carService.add(username, car);

@@ -37,10 +37,5 @@ public interface CustomerService {
      * @param customer 客户信息
      * */
     int updateCustomer(BusCustomer customer);
-    /**
-     * 删除一个客户信息
-     * @param id 客户ID
-     * */
-    int deleteCustomer(String identity);
 
 }

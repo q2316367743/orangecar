@@ -11,8 +11,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * @version 1.0
  * @created 2020年9月23日 下午3:27:51
  */
-@TableName("sys_new")
-public class SysNew implements Serializable {
+@TableName("sys_announcement")
+public class SysAnnouncement implements Serializable {
 
 	private static final long serialVersionUID = 4845165626198699466L;
 	private Integer id;

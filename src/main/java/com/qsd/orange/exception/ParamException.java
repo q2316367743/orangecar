@@ -16,7 +16,7 @@ public class ParamException {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public BaseVo missingServletRequestParameterException(MissingServletRequestParameterException e){
-        return new BaseVo(HttpResult.PARAM_ERROR);
+        return new BaseVo(HttpResult.PARAM_LACK);
     }
 
 }

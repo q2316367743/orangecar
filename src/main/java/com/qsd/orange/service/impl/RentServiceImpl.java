@@ -138,4 +138,23 @@ public class RentServiceImpl implements RentService {
         return info;
     }
 
+    @Override
+    public IPage<BusRent> sysAll(Integer page, Integer limit) {
+        return rentDao.selectPage(
+                new Page<>(page, limit),
+                new QueryWrapper<BusRent>()
+                        .orderByDesc("created"));
+    }
+
+    @Override
+    public IPage<BusRent> sysSearch(Integer page, Integer limit, Integer status, String type, String keyword) {
+        return rentDao.selectPage(
+                new Page<>(page, limit),
+                new QueryWrapper<BusRent>()
+                        .and(true, i -> i
+                                .eq(status != 0, "rent_status", status)
+                                .like(type, keyword))
+                        .orderByDesc("created"));
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.qsd.orange.security;
+package com.qsd.orange.exception;
 
 import cn.hutool.core.date.DateException;
 import com.qsd.orange.enums.HttpResult;

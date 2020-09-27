@@ -61,7 +61,10 @@
     </div>
 </body>
 <script type="text/javascript">
-
+    //判断是否在iframe中
+    if (self.frameElement && self.frameElement.tagName == "IFRAME") {
+        parent.location.reload();
+    }
     layui.use(['layer', 'form'], function() {
         let rememberMe = true;
         let form = layui.form;

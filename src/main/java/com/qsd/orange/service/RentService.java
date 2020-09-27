@@ -43,6 +43,25 @@ public interface RentService {
      * @return 0：出租单未找到；-1：新归还日期少于开始日期；-2：新归还日期少于今天；1：成功；-3：参数错误
      * */
     int updateReturnTime(String id, String returnTime);
+    /**
+     * 查询出租单详情、客户详情、车辆详情
+     * @param id 出租单号
+     * */
     Map<String, Object> info(String id);
+    /**
+     * 查询全部的出租单
+     * @param page 页码
+     * @param limit 每页数目
+     * */
+    IPage<BusRent> sysAll(Integer page, Integer limit);
+    /**
+     * 根据类型搜索出租单
+     * @param page 页码
+     * @param limit 每页数目
+     * @param status 出租状态
+     * @param type 类型
+     * @param keyword 关键字
+     * */
+    IPage<BusRent> sysSearch(Integer page, Integer limit, Integer status, String type, String keyword);
 
 }

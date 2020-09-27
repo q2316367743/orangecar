@@ -45,15 +45,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public int updateCustomer(BusCustomer customer) {
-        return 0;
-    }
-
-    @Override
-    public int deleteCustomer(String identity) {
-        BusCustomer customer = new BusCustomer();
-        customer.setIdentity(identity);
-        customer.setExist(false);
         return customerDao.updateById(customer);
     }
+
 
 }

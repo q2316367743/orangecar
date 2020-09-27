@@ -7,18 +7,9 @@
 	<link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
 	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style type="text/css">
-    	.my-title{
-    		position: absolute;
-    		top: 60px;
-    		left: 200px;
-    		right: 0px;
-    		height: 48px;
-			line-height: 48px;
-    		background-color: white;
-    	}
     	.my-body{
     		position: absolute;
-    		top: 108px;
+    		top: 60px;
     		left: 200px;
     		right: 0px;
     		bottom: 0px;
@@ -29,7 +20,7 @@
 <body class="layui-layout-body">
     <div class="layui-layout layui-layout-admin">
         <div class="layui-header">
-            <div class="layui-logo"><a style="color: white;" href="./">橘子汽车租赁</a></div>
+            <div class="layui-logo"><a style="color: white;" href="">橘子汽车租赁</a></div>
 			<ul class="layui-nav layui-layout-right">
 				<li class="layui-nav-item" lay-unselect><a href="http://www.hbeu.cn/" target="_blank">公司官网</a></li>
 				<li class="layui-nav-item" lay-unselect><a href="http://www.hbeu.cn/" target="_blank">帮助中心</a></li>
@@ -60,32 +51,25 @@
 					<li class="layui-nav-item" th:if="${type == 1}">
 					    <a href="javascript:;">系统管理</a>
 					    <dl class="layui-nav-child">
-							<dd><a layui-id="101" href="javascript:;">客户管理</a></dd>
-							<dd><a layui-id="102" href="javascript:;">车辆管理</a></dd>
-							<dd><a layui-id="103" href="javascript:;">出租单管理</a></dd>
-							<dd><a layui-id="104" href="javascript:;">检查单管理</a></dd>
-							<dd><a layui-id="105" href="javascript:;">用户管理</a></dd>
-							<dd><a layui-id="106" href="javascript:;">修改密码</a></dd>
-							<dd><a layui-id="107" href="javascript:;">日志管理</a></dd>
-							<dd><a layui-id="108" href="javascript:;">系统公告</a></dd>
-							<dd><a layui-id="109" href="javascript:;">数据源监控</a></dd>
+							<dd><a layui-id="101" href="javascript:;">车辆管理</a></dd>
+							<dd><a layui-id="102" href="javascript:;">出租单管理</a></dd>
+							<dd><a layui-id="103" href="javascript:;">检查单管理</a></dd>
+							<dd><a layui-id="104" href="javascript:;">用户管理</a></dd>
+							<dd><a layui-id="105" href="javascript:;">系统公告</a></dd>
+							<dd><a layui-id="106" href="javascript:;">数据源监控</a></dd>
 					    </dl>
 					</li>
 					<li class="layui-nav-item" th:if="${type == 1}">
 					    <a href="javascript:;">数据统计</a>
 					    <dl class="layui-nav-child">
-					      <dd><a layui-id="110" href="javascript:;">客户地区统计</a></dd>
-					      <dd><a layui-id="111" href="javascript:;">公司年度月份销售额曲线</a></dd>
-					      <dd><a layui-id="112" href="javascript:;">业务员年度销售额柱状图</a></dd>
+					      <dd><a layui-id="201" href="javascript:;">客户地区统计</a></dd>
+					      <dd><a layui-id="202" href="javascript:;">公司年度月份销售额曲线</a></dd>
+					      <dd><a layui-id="203" href="javascript:;">业务员年度销售额柱状图</a></dd>
 					    </dl>
 					</li>
-					<li class="layui-nav-item"><a layui-id="07" href="javascript:;">关于</a></li>
+					<li class="layui-nav-item"><a layui-id="07" href="javascript:;">个人中心</a></li>
+					<li class="layui-nav-item"><a layui-id="08" href="javascript:;">关于</a></li>
 				</ul>
-			</div>
-		</div>
-        <div class="my-title">
-			<div style="margin-left: 15px;">
-				<span id="title">主页</span>
 			</div>
 		</div>
         <div class="my-body" style="background-color: #F2F2F2;">
@@ -115,38 +99,42 @@
 				clickElement = elem;
 				var id = $(this).attr('layui-id');
 				if(id == '01'){
-					$("#title").html("主页");
 					$("#body").attr('src', 'home');
 				}else if(id == '02'){
-					$("#title").html("客户管理");
 					$("#body").attr('src', 'customer.html');
 				}else if(id == '03'){
-					$("#title").html("车辆管理");
 					$("#body").attr('src', 'car.html');
 				}else if(id == '04'){
-					$("#title").html("汽车出租");
 					$("#body").attr('src', 'business/rent.html');
 				}else if(id == '05'){
-					$("#title").html("汽车入库");
 					$("#body").attr('src', 'business/check.html');
 				}else if(id == '06'){
-					$("#title").html("出租单管理");
 					$("#body").attr('src', 'business/rents.html');
+				}else if(id == '07'){
+					$("#body").attr('src', 'self');
+				}else if(id == '08'){
+					$("#body").attr('src', 'about.html');
 				}else if(id == '101'){
-					$("#title").html("客户管理");
-					$("#body").attr('src', 'system/customer.html');
-				}else if(id == '102'){
-					$("#title").html("车辆管理");
 					$("#body").attr('src', 'system/car.html');
-				}else if(id == '103'){
-					$("#title").html("出租单管理");
+				}else if(id == '102'){
 					$("#body").attr('src', 'system/rent.html');
-				}else if(id == '104'){
-					$("#title").html("检查单管理");
+				}else if(id == '103'){
 					$("#body").attr('src', 'system/check.html');
-				}else if(id == '105'){
-					$("#title").html("用户管理");
+				}else if(id == '104'){
 					$("#body").attr('src', 'system/user.html');
+				}else if(id == '105'){
+					$("#body").attr('src', 'system/announcement.html');
+				}else if(id == '106'){
+					$("#body").attr('src', 'system/datasource');
+				}else if(id == '201'){
+					layer.alert("客户地区统计")
+					//$("#body").attr('src', 'system/user.html');
+				}else if(id == '202'){
+					layer.alert("公司年度月份销售额曲线")
+					//$("#body").attr('src', 'system/user.html');
+				}else if(id == '203'){
+					layer.alert("业务员年度销售额柱状图")
+					//$("#body").attr('src', 'system/user.html');
 				}
 			});
 			document.getElementById('body').onload = function(){

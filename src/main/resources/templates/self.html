@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>橘子汽车租赁</title>
+    <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
+    <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+    <script type="text/javascript" charset='utf-8' src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body style="background-color: #F2F2F2">
+<div class="layui-row">
+    <div class="layui-row" style="margin: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-header">个人中心</div>
+            <div class="layui-card-body layui-row">
+                <form class="layui-form layui-form-pane layui-col-xs6" lay-filter="user">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" th:value="${user.username}" name="username" class="layui-input" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" th:value="${user.name}" name="name" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">身份证号</label>
+                        <div class="layui-input-block">
+                            <input type="text" th:value="${user.identity}" name="identity" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-block">
+                            <input type="radio" th:checked="${user.gender == 1}" name="gender" value="1" title="男">
+                            <input type="radio" th:checked="${user.gender == 2}" name="gender" value="2" title="女">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" th:value="${user.address}" name="address" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-input-block">
+                            <input type="text" th:value="${user.phone}" name="phone" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">职位</label>
+                        <div class="layui-input-block">
+                            <input type="text" th:value="${user.position}" name="position" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="updateInfo">修改</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="margin-left: 20px;margin-right: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-header">密码修改</div>
+            <div class="layui-card-body layui-row">
+                <form class="layui-form layui-form-pane layui-col-xs6" lay-filter="password">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">原密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="oldPassword" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">新密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="newPassword" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="updatePwd">修改</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="application/javascript">
+    layui.use(['form', 'layer'], function () {
+        let form = layui.form;
+        let layer = layui.layer;
+        form.on('submit(updateInfo)', function (data) {
+            //修改基本信息
+            $.post('user/update/info', {
+                identity: data.field.identity,
+                name: data.field.name,
+                gender: data.field.gender,
+                address: data.field.address,
+                phone: data.field.phone,
+                position: data.field.position
+            }, function (res) {
+                if (res.code == 200) {
+                    layer.msg('修改成功', {
+                        icon: 1
+                    });
+                }else {
+                    layer.alert(res.message);
+                }
+            }, 'json');
+            return false;
+        });
+        form.on('submit(updatePwd)', function (data) {
+            //修改密码
+            let oldPassword = data.field.oldPassword;
+            let newPassword = data.field.newPassword;
+            if(oldPassword == newPassword){
+                layer.msg('新密码不能与旧密码相同', {
+                    icon: 2
+                });
+                return false;
+            }
+            $.post('user/update/password', {
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            }, function (res) {
+                if(res.code == 200){
+                    layer.msg('修改成功', {
+                        icon: 1
+                    })
+                    form.val('password', {
+                        oldPassword: '',
+                        newPassword: ''
+                    })
+                    //替换新密码
+                    localStorage.setItem('password', newPassword);
+                }else if (res.code == 508){
+                    layer.alert('新密码不能与旧密码相同');
+                }else if(res.code == 501) {
+                    layer.alert('原密码错误');
+                }else {
+                    layer.alert(res.message);
+                }
+            }, 'json');
+            return false;
+        });
+    })
+</script>
+</html>

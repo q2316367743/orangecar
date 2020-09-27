@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
+
 /**
  * 用户表
  * @author Esion
@@ -17,14 +20,19 @@ public class SysUser implements Serializable {
 
 	private static final long serialVersionUID = 5546148053917409573L;
 	@TableId(type = IdType.NONE)
+	@NotBlank
 	private String username;
+	@Null
 	private String password;
+	@NotBlank
 	private String identity;
+	@NotBlank
 	private String name;
 	private Integer gender;
 	private String address;
 	private String phone;
 	private String position;
+	@Null
 	private Integer type;
 	
 	public String getUsername() {
