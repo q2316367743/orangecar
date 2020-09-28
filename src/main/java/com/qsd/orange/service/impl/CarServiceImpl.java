@@ -25,7 +25,11 @@ public class CarServiceImpl implements CarService {
     public IPage<BusCar> queryAllCar(Integer page, Integer limit, Integer status) {
         return carDao.selectPage(
                 new Page<>(page, limit),
-                new QueryWrapper<BusCar>().eq(status >= 0, "status", status).orderByDesc("created"));
+                new QueryWrapper<BusCar>()
+                        .and(true, i -> i
+                                .eq(status >= 0, "status", status)
+                                .eq("exist", 1)
+                        ).orderByDesc("created"));
     }
 
     @Override
@@ -34,9 +38,30 @@ public class CarServiceImpl implements CarService {
                 new Page<>(page, limit),
                 new QueryWrapper<BusCar>()
                         .and(true, i -> i
-                        .like(brand != "", "brand", brand)
-                        .like(color != "", "color", color))
+                            .like(brand != "", "brand", brand)
+                            .like(color != "", "color", color)
+                            .eq("exist", 1)
+                        )
                     .orderByDesc("created"));
+    }
+
+    @Override
+    public IPage<BusCar> queryAllCarSys(Integer page, Integer limit, Integer status) {
+        return carDao.selectPage(
+                new Page<>(page, limit),
+                new QueryWrapper<BusCar>().eq(status >= 0, "status", status).orderByDesc("created"));
+    }
+
+    @Override
+    public IPage<BusCar> queryCarSys(Integer page, Integer limit, Integer status, String brand, String color) {
+        return carDao.selectPage(
+                new Page<>(page, limit),
+                new QueryWrapper<BusCar>()
+                        .and(true, i -> i
+                                .like(brand != "", "brand", brand)
+                                .like(color != "", "color", color)
+                        )
+                        .orderByDesc("created"));
     }
 
     @Override
@@ -45,8 +70,10 @@ public class CarServiceImpl implements CarService {
                 new Page<>(page, limit),
                 new QueryWrapper<BusCar>()
                         .and(true, i -> i
-                        .eq(true, "status", 0)
-                        .eq(!number.equals(""), "number", number))
+                            .eq(true, "status", 0)
+                            .eq(!number.equals(""), "number", number)
+                            .eq("exist", 1)
+                        )
                     .orderByDesc("created"));
     }
 
@@ -55,7 +82,21 @@ public class CarServiceImpl implements CarService {
         car.setCreated(DateUtil.date().toTimestamp());
         car.setOperator(username);
         car.setStatus(0);
+        car.setExist(1);
         return carDao.insert(car);
+    }
+
+    @Override
+    public int update(BusCar car) {
+        return carDao.updateById(car);
+    }
+
+    @Override
+    public int updateExist(String number, Integer exist) {
+        BusCar car = new BusCar();
+        car.setNumber(number);
+        car.setExist(exist);
+        return carDao.updateById(car);
     }
 
 }

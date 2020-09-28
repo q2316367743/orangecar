@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 系统通知
@@ -18,6 +19,7 @@ public class SysAnnouncement implements Serializable {
 	private Integer id;
 	private String title;
 	private String content;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone="GMT+8")
 	private Timestamp created;
 	private String operator;
 	public Integer getId() {

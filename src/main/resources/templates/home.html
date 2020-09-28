@@ -8,17 +8,97 @@
     <script type="text/javascript" charset='utf-8' src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body style="background-color: #F2F2F2">
-<div class="layui-row">
-    <div class="layui-row" style="margin: 20px;">
+<div class="layui-row layui-col-space15" style="margin: 20px;">
+    <div class="layui-col-xs6">
         <div class="layui-card">
-            <div class="layui-card-header">公司通知</div>
+            <div class="layui-card-header">公司公告</div>
             <div class="layui-card-body layui-row">
-                <form class="layui-form layui-form-pane layui-col-xs6">
-                </form>
+                <table id="announcements" lay-filter="announcements"></table>
+            </div>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-card">
+            <div class="layui-card-header">当前日历</div>
+            <div class="layui-card-body layui-row">
+                <div class="layui-inline" id="calendar"></div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <div class="layui-card">
+            <div class="layui-card-header">当前时间</div>
+            <div class="layui-card-body layui-row">
+                <div class="layui-inline" id="time"></div>
             </div>
         </div>
     </div>
 </div>
-
 </body>
+<script type="text/html" id="announcementsDialog">
+    <h1 align="center">{{ d.title }}</h1>
+    <blockquote class="layui-elem-quote" style="margin-top: 20px;">{{ d.operator }}</blockquote>
+    <p style="margin-top: 20px;"><b>发布时间：</b>{{ d.created }}</p>
+    <p style="margin-top: 20px;">{{ d.content }}</p>
+</script>
+<script>
+    layui.use(['laydate', 'table', 'layer', 'laytpl'], function() {
+        let laydate = layui.laydate;
+        let table = layui.table;
+        let layer = layui.layer;
+        let laytpl = layui.laytpl;
+        //直接嵌套显示
+        laydate.render({
+            elem: '#calendar',
+            position: 'static',
+            calendar: true
+        });
+        laydate.render({
+            elem: '#time',
+            type: 'time',
+            position: 'static',
+            value: new Date()
+        });
+        table.render({
+            id: 'announcement',
+            elem: '#announcements',
+            url: 'announcement/all', //数据接口
+            where: {
+                status: -1
+            },
+            title: '公司通知',
+            page: true, //开启分页
+            limit: 9,
+            limits: [9, 18, 27, 35, 45, 54],
+            defaultToolbar: ['filter', 'print', 'exports'],//工具条
+            cols: [ [ //表头
+                {field: 'title', title: '标题', style:'cursor: pointer;'},
+                {field: 'created', title: '创建时间', width:200, sort: true},
+                {field: 'operator', title: '操作人', width:120},
+            ] ],
+            response: {
+                statusName: 'code', //规定数据状态的字段名称，默认：code
+                statusCode: 200, //规定成功的状态码，默认：0
+                msgName: 'message', //规定状态信息的字段名称，默认：msg
+                countName: 'total', //规定数据总数的字段名称，默认：count
+                dataName: 'record', //规定数据列表的字段名称，默认：data
+            }
+        });
+
+        //监听单元格事件
+        table.on('row(announcements)', function(obj){
+            let data = obj.data;
+            let announcementsDialog = $('#announcementsDialog').html();
+            data.type = 1;
+            laytpl(announcementsDialog).render(data, function(html) {
+                layer.open({
+                    type: 1,
+                    title: '公告详情',
+                    area: ['400px', '460px'],
+                    content: html,
+                });
+            });
+        });
+    });
+</script>
 </html>

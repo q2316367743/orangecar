@@ -29,10 +29,113 @@
         <div class="layui-card">
             <div class="layui-card-header">检查单管理</div>
             <div class="layui-card-body layui-row">
+                <table id="checks" lay-filter="checks"></table>
             </div>
         </div>
     </div>
 </div>
-
 </body>
+<script type="text/html" id="checkDialog">
+    <div class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label class="layui-form-label">检查单号</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.id }}" name="address" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">检查日期</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.checkDate }}" name="address" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出现问题</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.problem }}" name="address" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">赔偿金额</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.compensate }}" name="address" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">问题描述</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.description }}" name="address" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">操作人</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.operator }}" name="address" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出租单号</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{ d.rentId }}" name="address" class="layui-input" disabled>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="application/javascript">
+    layui.use(['table', 'form', 'laytpl'], function () {
+        let table = layui.table;
+        let form = layui.form;
+        let laytpl = layui.laytpl;
+        table.render({
+            id: 'checks',
+            elem: '#checks',
+            url: 'check/all', //数据接口
+            title: '检查单数据表',
+            page: true, //开启分页
+            limit: 9,
+            limits: [9, 18, 27, 35, 45, 54],
+            toolbar: true,
+            defaultToolbar: ['filter', 'print', 'exports'],//工具条
+            cols: [ [ //表头
+                {field: 'id', title: '检查单号', width:280},
+                {field: 'checkDate', title: '检查日期', width:150, sort: true},
+                {field: 'problem', title: '出现问题', width:120},
+                {field: 'compensate', title: '赔偿金额', width:120},
+                {field: 'description', title: '问题描述'},
+                {field: 'operator', title: '操作人', width:120},
+                {field: 'rentId', title: '出租单号', width:280}
+            ] ],
+            response: {
+                statusName: 'code', //规定数据状态的字段名称，默认：code
+                statusCode: 200, //规定成功的状态码，默认：0
+                msgName: 'message', //规定状态信息的字段名称，默认：msg
+                countName: 'total', //规定数据总数的字段名称，默认：count
+                dataName: 'record', //规定数据列表的字段名称，默认：data
+            }
+        });
+
+        form.on('submit(search)', function (data){
+            let id = data.field.id;
+            $.getJSON('check/search', {
+                id: id
+            }, function (res) {
+                if(res.code == 200){
+                    let checkDialog = $('#checkDialog').html();
+                    laytpl(checkDialog).render(res.data, function(html) {
+                        layer.open({
+                            type: 1,
+                            title: '检查单信息',
+                            area: ['500px', '500px'],
+                            content: html,
+                        });
+                    });
+                }else {
+                    layer.alert(res.message)
+                }
+            });
+            return false;
+        });
+
+    })
+</script>
 </html>

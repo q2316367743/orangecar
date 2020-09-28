@@ -26,6 +26,16 @@ public interface CarService {
      * @param color 汽车颜色
      * */
     IPage<BusCar> queryCar(Integer page, Integer limit, Integer status, String brand, String color);
+    /**
+     * 查询全部汽车
+     * 管理员
+     * */
+    IPage<BusCar> queryAllCarSys(Integer page, Integer limit, Integer status);
+    /**
+     * 查询全部汽车
+     * 管理员
+     * */
+    IPage<BusCar> queryCarSys(Integer page, Integer limit, Integer status, String brand, String color);
     IPage<BusCar> queryCarByNumber(Integer page, Integer limit, String number);
     /**
      * 增加一个车辆信息
@@ -33,5 +43,16 @@ public interface CarService {
      * @param car 汽车信息
      * */
     int add(String username, BusCar car);
+    /**
+     * 修改车辆信息
+     * @param car 车辆信息
+     * */
+    int update(BusCar car);
+    /**
+     * 修改车辆状态，是否启用/报废
+     * @param number 车牌号
+     * @param exist 状态
+     * */
+    int updateExist(String number, Integer exist);
 
 }

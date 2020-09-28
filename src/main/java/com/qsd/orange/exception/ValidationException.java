@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.UnexpectedTypeException;
 import java.util.List;
 
 /**
@@ -26,7 +27,8 @@ public class ValidationException {
 
     @ExceptionHandler({
             MethodArgumentNotValidException.class,
-            BindException.class
+            BindException.class,
+            UnexpectedTypeException.class
     })
     public BaseVo validation(){
         return new BaseVo(HttpResult.PARAM_ERROR);

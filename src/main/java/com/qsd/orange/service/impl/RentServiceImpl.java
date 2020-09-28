@@ -55,7 +55,7 @@ public class RentServiceImpl implements RentService {
         rent.setOperator(username);
         rent.setPrice(car.getRentPrice());
         rent.setCustomerIdentity(identity);
-        rent.setId("CZ_" + DateUtil.date().toString("yyyyMMdd") + "_" + String.valueOf(System.currentTimeMillis()) + "_" + RandomUtil.randomNumbers(4));
+        rent.setId("CZ_" + DateUtil.date().toString("yyyyMMdd") + "_" + System.currentTimeMillis() + "_" + RandomUtil.randomNumbers(4));
         int insert = rentDao.insert(rent);
         if (insert == 0){
             return 0;
@@ -152,7 +152,7 @@ public class RentServiceImpl implements RentService {
                 new Page<>(page, limit),
                 new QueryWrapper<BusRent>()
                         .and(true, i -> i
-                                .eq(status != 0, "rent_status", status)
+                                .eq(status != 2, "rent_status", status)
                                 .like(type, keyword))
                         .orderByDesc("created"));
     }

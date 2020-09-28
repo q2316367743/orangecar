@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 还车表
@@ -21,6 +22,7 @@ public class BusCheck implements Serializable {
 	@TableId(type = IdType.NONE)
 	private String id;
 	@TableField("check_date")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone="GMT+8")
 	private Timestamp checkDate;
 	private String description;
 	private String problem;

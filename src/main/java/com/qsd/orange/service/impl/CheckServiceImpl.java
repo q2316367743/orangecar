@@ -3,6 +3,9 @@ package com.qsd.orange.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qsd.orange.dao.CarDao;
 import com.qsd.orange.dao.CheckDao;
 import com.qsd.orange.dao.RentDao;
@@ -40,7 +43,7 @@ public class CheckServiceImpl implements CheckService {
         }
         BusCheck check = new BusCheck();
         Timestamp returnTime = DateUtil.date().toTimestamp();
-        check.setId("JC_" + DateUtil.date().toString("yyyyMMdd") + "_" + RandomUtil.randomNumbers(4));
+        check.setId("JC_" + DateUtil.date().toString("yyyyMMdd") + "_" + System.currentTimeMillis() + "_" + RandomUtil.randomNumbers(4));
         check.setCheckDate(returnTime);
         check.setCompensate(compensate);
         check.setDescription(description);
@@ -62,6 +65,19 @@ public class CheckServiceImpl implements CheckService {
             carDao.updateById(car);
         }
         return insert;
+    }
+
+    @Override
+    public IPage<BusCheck> all(Integer page, Integer limit) {
+        return checkDao.selectPage(
+                new Page<>(page, limit),
+                new QueryWrapper<BusCheck>().orderByDesc("check_date")
+        );
+    }
+
+    @Override
+    public BusCheck search(String id) {
+        return checkDao.selectById(id);
     }
 
 }

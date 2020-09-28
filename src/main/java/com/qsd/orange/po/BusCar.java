@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 /**
@@ -30,13 +31,13 @@ public class BusCar implements Serializable {
 	@NotBlank
 	private String color;
 	@TableField("buy_price")
-	@NotBlank
+	@NotNull
 	private Double buyPrice;
 	@TableField("rent_price")
-	@NotBlank
+	@NotNull
 	private Double rentPrice;
 	//押金
-	@NotBlank
+	@NotNull
 	private Double deposit;
 	//出租状态
 	@Null
@@ -50,6 +51,8 @@ public class BusCar implements Serializable {
 	private Timestamp created;
 	@Null
 	private String operator;
+	@Null
+	private Integer exist;
 	public String getNumber() {
 		return number;
 	}
@@ -110,12 +113,16 @@ public class BusCar implements Serializable {
 	public void setCreated(Timestamp created) {
 		this.created = created;
 	}
-
 	public String getOperator() {
 		return operator;
 	}
-
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+	public Integer getExist() {
+		return exist;
+	}
+	public void setExist(Integer exist) {
+		this.exist = exist;
 	}
 }

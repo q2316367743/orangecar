@@ -26,17 +26,18 @@ import java.io.InputStream;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("resource")
-public class ResourceController {
+@RequestMapping("system/resource")
+public class SystemResourceController {
 
     public static final String IMAGE_PATH = "F:\\nginx\\nginx-image\\html";
 
-    @PostMapping("image")
+    @PostMapping("image/add")
     public DataVo<String> updateImage(MultipartFile file){
-        String name = file.getName();
-        if(StrUtil.isBlank(name)){
-            name = String.valueOf(System.currentTimeMillis()) + ".jpg";
-        }
+        String name = "temp";
+        String temp = file.getName();
+        System.out.println(temp);
+        temp = "png";
+        name = System.currentTimeMillis() + "." + temp;
         try(InputStream inputStream = file.getInputStream();) {
             FileWriter fileWriter = new FileWriter(new File(IMAGE_PATH, name));
             BufferedOutputStream outputStream = fileWriter.getOutputStream();

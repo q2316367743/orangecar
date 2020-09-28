@@ -11,14 +11,407 @@
 <div class="layui-row">
     <div class="layui-row" style="margin: 20px;">
         <div class="layui-card">
-            <div class="layui-card-header">车辆管理</div>
+            <div class="layui-card-header"><i class="layui-icon layui-icon-search"></i>查询条件</div>
             <div class="layui-card-body layui-row">
                 <form class="layui-form layui-form-pane layui-col-xs6">
+                    <div class="layui-form-item" pane>
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="status" lay-filter="status" value="-1" title="全部" checked>
+                            <input type="radio" name="status" lay-filter="status" value="0" title="未出租" style="margin-left: 20px;">
+                            <input type="radio" name="status" lay-filter="status" value="1" title="已出租" style="margin-left: 20px;">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">品牌</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="brand" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">颜色</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="color" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="search"><i class="layui-icon layui-icon-search"></i>查询</button>
+                            <button type="reset" class="layui-btn layui-btn-primary"><i class="layui-icon layui-icon-refresh"></i>重置</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
+    <div class="layui-row" style="margin-left: 20px;margin-right: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-header">车辆列表</div>
+            <div class="layui-card-body layui-row">
+                <!-- 显示 -->
+                <table id="cars" lay-filter="cars"></table>
+            </div>
+        </div>
+    </div>
 </div>
-
 </body>
+<!-- 表格头部工具栏 -->
+<script type="text/html" id="leftBar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加车辆</button>
+    </div>
+</script>
+<!-- 右侧工具栏 -->
+<script type="text/html" id="rightBar">
+    <a class="layui-btn layui-btn-xs" lay-event="info">详情</a>
+    <a class="layui-btn layui-btn-xs" lay-event="update">修改</a>
+    <a class="layui-btn layui-btn-xs" lay-event="exist">报废/重新启用</a>
+</script>
+<script type="text/html" id="carDialog">
+    <form class="layui-form layui-form-pane">
+        <div class="layui-col-xs8">
+            <div class="layui-form-item">
+                <label class="layui-form-label">车牌号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="number" value="{{ d.number }}" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">车辆品牌</label>
+                <div class="layui-input-block">
+                    <input type="text" name="brand" value="{{ d.brand }}" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">车辆颜色</label>
+                <div class="layui-input-block">
+                    <input type="text" name="color" value="{{ d.color }}" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs4">
+            <input type="hidden" name="image" id="image" value="{{ d.image }}">
+            <div class="layui-upload-drag" id="carImg">
+                <div id="prompt">
+                    <i class="layui-icon layui-icon-picture"></i>
+                    <p>点击上传，或将文件拖拽到此处</p>
+                </div>
+                <div class="layui-hide" id="uploadDemoView">
+                    <hr>
+                    <img src="{{ 'http://localhost/' + d.image }}" alt="上传成功后渲染" style="max-width: 154px;max-height: 154px;">
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-form-item">
+                <label class="layui-form-label">购买价格</label>
+                <div class="layui-input-block">
+                    <input type="text" name="buyPrice" value="{{ d.buyPrice }}" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出租价格</label>
+                <div class="layui-input-block">
+                    <input type="text" name="rentPrice" value="{{ d.rentPrice }}" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">押金</label>
+                <div class="layui-input-block">
+                    <input type="text" name="deposit" value="{{ d.deposit }}" class="layui-input" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">车辆描述</label>
+                <div class="layui-input-block">
+                    <textarea name="description" class="layui-textarea">{{ d.description }}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    {{#  if(d.type === 0){ }}
+                    <button class="layui-btn" lay-submit lay-filter="add"><i class="layui-icon layui-icon-search"></i>新增</button>
+                    {{#  } else if (d.type === 1){ }}
+                    <button class="layui-btn" lay-submit lay-filter="update"><i class="layui-icon layui-icon-search"></i>修改</button>
+                    {{#  } }}
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+<script type="application/javascript">
+    let dialog = -1;
+    layui.use(['layer', 'form', 'table', 'laytpl', 'upload'], function () {
+        let layer = layui.layer;
+        let form = layui.form;
+        let table = layui.table;
+        let laytpl = layui.laytpl;
+        let upload = layui.upload;
+        table.render({
+            id: 'car',
+            elem: '#cars',
+            url: 'car/all', //数据接口
+            where: {
+                status: -1
+            },
+            title: '客户数据表',
+            toolbar: '#leftBar',
+            page: true, //开启分页
+            limit: 9,
+            limits: [9, 18, 27, 35, 45, 54],
+            defaultToolbar: ['filter', 'print', 'exports'],//工具条
+            cols: [ [ //表头
+                {field: 'number', title: '车牌号', width:130, sort: true},
+                {field: 'brand', title: '品牌', width:120},
+                {field: 'color', title: '颜色', width:120},
+                {field: 'buyPrice', title: '购买价格', width:120},
+                {field: 'rentPrice', title: '出租价格', width:120},
+                {field: 'deposit', title: '押金', width:120},
+                {field: 'status', title: '状态', width:100, templet: function(d){
+                        let status = d.status;
+                        switch (status){
+                            case 0:
+                                return '<span style="color: forestgreen">未出租</span>';
+                            case 1:
+                                return '<span style="color: red">已出租</span>';
+                            default:
+                                return '<span style="color: cornflowerblue">未知</span>';
+                        }
+                    }
+                },
+                {field: 'exist', title: '情况', width:120, templet: function(d){
+                        let exist = d.exist;
+                        switch (exist){
+                            case 0:
+                                return '<span style="color: forestgreen">已报废</span>';
+                            case 1:
+                                return '<span style="color: red">使用中</span>';
+                            default:
+                                return '<span style="color: cornflowerblue">未知</span>';
+                        }
+                    }},
+                {field: 'description', title: '描述'},
+                {fixed: 'right', title:'操作', toolbar: '#rightBar', width:250}
+            ] ],
+            response: {
+                statusName: 'code', //规定数据状态的字段名称，默认：code
+                statusCode: 200, //规定成功的状态码，默认：0
+                msgName: 'message', //规定状态信息的字段名称，默认：msg
+                countName: 'total', //规定数据总数的字段名称，默认：count
+                dataName: 'record', //规定数据列表的字段名称，默认：data
+            }
+        });
+
+        //头工具栏事件
+        table.on('toolbar(cars)', function(obj){
+            let checkStatus = table.checkStatus(obj.config.id);
+            //新增数据
+            if(obj.event == 'add'){
+                let car = {
+                    number: '',
+                    name: '',
+                    brand: '',
+                    color: '',
+                    buyPrice: '',
+                    rentPrice: '',
+                    deposit: '',
+                    description: '',
+                    type: 0
+                }
+                let carDialog = $('#carDialog').html();
+                laytpl(carDialog).render(car, function(html) {
+                    if (dialog != -1){
+                        layer.close(dialog);
+                        dialog = -1;
+                    }
+                    dialog = layer.open({
+                        type: 1,
+                        title: '新增客户',
+                        area: ['650px', '570px'],
+                        content: html,
+                        success: function () {
+                            //拖拽上传
+                            upload.render({
+                                elem: '#carImg',
+                                url: 'resource/image/add', //改成您自己的上传接口
+                                accept: 'images',
+                                acceptMime: 'image/jpg, image/png',
+                                done: function(res, index, upload){
+                                    if(res.code == 200){
+                                        layer.msg('上传成功');
+                                        $('#prompt').hide();
+                                        $('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', 'http://localhost/' + res.data);
+                                        $("#image").val(res.data)
+                                    }else {
+                                        layer.msg(res.message)
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(cars)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'info'){
+                layer.open({
+                    type: 1,
+                    content: '<img src="http://localhost/' + data.image + '" title="汽车图片">' //这里content是一个普通的String
+                });
+            }else if (obj.event == 'update'){
+                let carDialog = $('#carDialog').html();
+                data.type = 1;
+                laytpl(carDialog).render(data, function(html) {
+                    if (dialog != -1){
+                        layer.close(dialog);
+                        dialog = -1;
+                    }
+                    dialog = layer.open({
+                        type: 1,
+                        title: '新增客户',
+                        area: ['650px', '570px'],
+                        content: html,
+                        success: function (){
+                            $('#uploadDemoView').removeClass('layui-hide')
+                            $('#prompt').hide();
+                            //拖拽上传
+                            upload.render({
+                                elem: '#carImg',
+                                url: 'resource/image/add', //改成您自己的上传接口
+                                accept: 'images',
+                                acceptMime: 'image/jpg, image/png',
+                                done: function(res, index, upload){
+                                    if(res.code == 200){
+                                        layer.msg('上传成功');
+                                        $('#prompt').hide();
+                                        $('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', 'http://localhost/' + res.data);
+                                        $("#image").val(res.data)
+                                    }else {
+                                        layer.msg(res.message)
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+            }else if (obj.event == 'exist'){
+                let number = data.number;
+                let exist = data.exist;
+                let url = 'car/update/exist/';
+                let msg = '';
+                if (exist == 0){
+                    url = url + 'enable';
+                    msg = '已启用'
+                }else if (exist == 1){
+                    url = url + 'unable';
+                    msg = '已弃用'
+                }
+                $.post(url, {
+                    number: number
+                }, function (res) {
+                    if(res.code == 200){
+                        layer.msg('操作成功，' + msg, {
+                            icon: 1
+                        });
+                        table.reload('car', {
+                            page: {
+                                curr: 1
+                            }
+                        });
+                    }else{
+                        layer.alert(res.message);
+                    }
+                }, 'json');
+            }
+        });
+
+        //出租状态监听
+        form.on('radio(status)', function(data){
+            let status = data.value;
+            table.reload('car', {
+                where: {
+                    status: status
+                }
+            })
+        });
+
+        //查询
+        form.on('submit(search)', function(data){
+            let brand = data.field.brand;
+            let color = data.field.color;
+            let status = data.field.status;
+            if(brand == "" && color == ""){
+                table.reload('car', {
+                    url: 'car/all',
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        status: -1
+                    }
+                });
+            }else{
+                table.reload('car', {
+                    url: 'car/search',
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where: {
+                        brand: brand,
+                        color: color,
+                        status: status
+                    }
+                });
+            }
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        form.on('submit(add)', function (data){
+            $.post('car/add', data.field, function (res) {
+                if(res.code == 200){
+                    layer.msg('新增成功', {
+                        icon: 1
+                    });
+                    table.reload('car', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    });
+                }else {
+                    layer.msg(res.message, {
+                        icon: 2
+                    })
+                }
+                layer.close(dialog);
+                dialog = -1;
+            })
+            return false;
+        })
+        form.on('submit(update)', function (data){
+            $.post('car/update/all', data.field, function (res) {
+                if(res.code == 200){
+                    layer.msg('新增成功', {
+                        icon: 1
+                    });
+                    table.reload('car', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    });
+                }else {
+                    layer.msg(res.message, {
+                        icon: 2
+                    })
+                }
+                layer.close(dialog);
+                dialog = -1;
+            })
+            return false;
+        })
+
+    })
+</script>
 </html>
