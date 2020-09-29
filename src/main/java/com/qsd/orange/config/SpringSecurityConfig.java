@@ -41,7 +41,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login.html").permitAll()
                 .antMatchers("/image/**").permitAll()
                 .antMatchers("/system/**").hasRole("1")
-                .antMatchers("/data/**").hasRole("1")
                 .anyRequest().authenticated();
 
         //登录配置

@@ -59,14 +59,6 @@
 							<dd><a layui-id="106" href="javascript:;">数据源监控</a></dd>
 					    </dl>
 					</li>
-					<li class="layui-nav-item" th:if="${type == 1}">
-					    <a href="javascript:;">数据统计</a>
-					    <dl class="layui-nav-child">
-					      <dd><a layui-id="201" href="javascript:;">客户地区统计</a></dd>
-					      <dd><a layui-id="202" href="javascript:;">公司年度月份销售额曲线</a></dd>
-					      <dd><a layui-id="203" href="javascript:;">业务员年度销售额柱状图</a></dd>
-					    </dl>
-					</li>
 					<li class="layui-nav-item"><a layui-id="07" href="javascript:;">个人中心</a></li>
 					<li class="layui-nav-item"><a layui-id="08" href="javascript:;">关于</a></li>
 				</ul>
@@ -126,15 +118,6 @@
 					$("#body").attr('src', 'system/announcement.html');
 				}else if(id == '106'){
 					$("#body").attr('src', 'system/datasource');
-				}else if(id == '201'){
-					layer.alert("客户地区统计")
-					//$("#body").attr('src', 'system/user.html');
-				}else if(id == '202'){
-					layer.alert("公司年度月份销售额曲线")
-					//$("#body").attr('src', 'system/user.html');
-				}else if(id == '203'){
-					layer.alert("业务员年度销售额柱状图")
-					//$("#body").attr('src', 'system/user.html');
 				}
 			});
 			document.getElementById('body').onload = function(){

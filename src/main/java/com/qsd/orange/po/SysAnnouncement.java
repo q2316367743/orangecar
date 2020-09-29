@@ -3,8 +3,13 @@ package com.qsd.orange.po;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 
 /**
  * 系统通知
@@ -16,11 +21,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class SysAnnouncement implements Serializable {
 
 	private static final long serialVersionUID = 4845165626198699466L;
+	@TableId(type = IdType.AUTO)
+	@Null
 	private Integer id;
+	@NotBlank
 	private String title;
+	@NotBlank
 	private String content;
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone="GMT+8")
+	@Null
 	private Timestamp created;
+	@Null
 	private String operator;
 	public Integer getId() {
 		return id;

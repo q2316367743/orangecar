@@ -6,6 +6,7 @@
     <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
     <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
     <script type="text/javascript" charset='utf-8' src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
 </head>
 <body style="background-color: #F2F2F2">
 <div class="layui-row">
@@ -13,12 +14,182 @@
         <div class="layui-card">
             <div class="layui-card-header">公告管理</div>
             <div class="layui-card-body layui-row">
-                <form class="layui-form layui-form-pane layui-col-xs6">
-                </form>
+                <table id="announcements" lay-filter="announcements"></table>
             </div>
         </div>
     </div>
 </div>
-
 </body>
+<!-- 表格头部工具栏 -->
+<script type="text/html" id="leftBar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">新增公告</button>
+    </div>
+</script>
+<script type="text/html" id="announcementDialog">
+    <form class="layui-form layui-form-pane layui-col-xs6">
+        <input type="hidden" value="{{ d.id }}" name="id">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" value="{{ d.title }}" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <div id="content" style="width: 705px;">{{ d.content }}</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {{#  if(d.type === 0){ }}
+                <button class="layui-btn" lay-submit lay-filter="add">新增</button>
+                {{#  } else if (d.type === 1){ }}
+                <button class="layui-btn" lay-submit lay-filter="update">修改</button>
+                {{#  } }}
+
+            </div>
+        </div>
+    </form>
+</script>
+<script type="application/javascript">
+    let dialog = -1;
+    layui.use(['layer', 'form', 'table', 'laytpl'], function () {
+        let layer = layui.layer;
+        let form = layui.form;
+        let table = layui.table;
+        let laytpl = layui.laytpl;
+        let E = window.wangEditor
+        let editor = null;
+
+        table.render({
+            id: 'announcement',
+            elem: '#announcements',
+            url: '../announcement/all', //数据接口
+            where: {
+                status: -1
+            },
+            title: '公司通知',
+            page: true, //开启分页
+            limit: 9,
+            limits: [9, 18, 27, 35, 45, 54],
+            toolbar: '#leftBar',
+            defaultToolbar: ['filter', 'print', 'exports'],//工具条
+            cols: [ [ //表头
+                {field: 'title', title: '标题', style:'cursor: pointer;'},
+                {field: 'created', title: '创建时间', width:200, sort: true},
+                {field: 'operator', title: '操作人', width:120},
+            ] ],
+            response: {
+                statusName: 'code', //规定数据状态的字段名称，默认：code
+                statusCode: 200, //规定成功的状态码，默认：0
+                msgName: 'message', //规定状态信息的字段名称，默认：msg
+                countName: 'total', //规定数据总数的字段名称，默认：count
+                dataName: 'record', //规定数据列表的字段名称，默认：data
+            }
+        });
+
+        //头工具栏事件
+        table.on('toolbar(announcements)', function(obj){
+            //新增数据
+            if(obj.event == 'add'){
+                let data = {
+                    id: '',
+                    title: '',
+                    content: '',
+                    type: 0
+                }
+                let announcementDialog = $('#announcementDialog').html();
+                laytpl(announcementDialog).render(data, function(html) {
+                    if(dialog != -1){
+                        layer.close(dialog);
+                        dialog = -1;
+                    }
+                    dialog = layer.open({
+                        type: 1,
+                        title: '新增公告',
+                        area: ['820px', '520px'],
+                        content: html,
+                        success: function () {
+                            editor = new E('#content')
+                            editor.create()
+                        }
+                    });
+                });
+            }
+        });
+
+        //监听单元格事件
+        table.on('row(announcements)', function(obj){
+            let data = obj.data;
+            data.type = 1;
+            let announcementDialog = $('#announcementDialog').html();
+            laytpl(announcementDialog).render(data, function(html) {
+                if(dialog != -1){
+                    layer.close(dialog);
+                    dialog = -1;
+                }
+                dialog = layer.open({
+                    type: 1,
+                    title: '修改公告',
+                    area: ['820px', '520px'],
+                    content: html,
+                    success: function () {
+                        editor = new E('#content')
+                        editor.create()
+                    }
+                });
+            });
+        });
+
+        form.on('submit(add)', function (data) {
+            $.post('announcement/add', {
+                title: data.field.title,
+                content: editor.txt.html()
+            }, function (res) {
+                if(res.code == 200){
+                    layer.msg('新增成功', {
+                        icon: 1
+                    })
+                    table.reload('announcement', {
+                        page: {
+                            curr: 1
+                        }
+                    });
+                    layer.close(dialog);
+                    dialog = -1;
+                }else {
+                    layer.alert(res.message)
+                }
+            }, 'json')
+            editor = null;
+            return false;
+        })
+        form.on('submit(update)', function (data) {
+            $.post('announcement/update', {
+                id: data.field.id,
+                title: data.field.title,
+                content: editor.txt.html()
+            }, function (res) {
+                if(res.code == 200){
+                    layer.msg('修改成功', {
+                        icon: 1
+                    })
+                    table.reload('announcement', {
+                        page: {
+                            curr: 1
+                        }
+                    });
+                    layer.close(dialog);
+                    dialog = -1;
+                }else {
+                    layer.alert(res.message)
+                }
+            }, 'json')
+            editor = null;
+            return false;
+        })
+    })
+</script>
 </html>

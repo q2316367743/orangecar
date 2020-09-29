@@ -42,12 +42,6 @@
         - 系统公告
             - 新增系统公告
             - 修改系统公告
-    - 数据统计
-        - 客户地区统计
-        - 公司年度月份销售额曲线
-        - 业务员年度销售额柱状图
-    
-        
 
 ## 相关技术栈
 
@@ -81,3 +75,64 @@
 
 |字段|类型|长度|说明|备注|
 |:-----|:-----|:-----|:-----|:-----|
+|id|varchar|32|检查单号||
+|check_date|datetime|0|检查时间||
+|description|varchar|255|问题描述||
+|problem|varchar|255|存在的问题||
+|compensate|double|8,2|赔偿金额||
+|operator|varchar|9|操作人||
+|rent_id|varchar|32|出租单号||
+
+### bus_customer
+
+|字段|类型|长度|说明|备注|
+|:-----|:-----|:-----|:-----|:-----|
+|identity|varchar|255|身份证号||
+|name|varchar|255|姓名||
+|gender|tinyint|1|性别|0：未知，1：男，2：女|
+|address|varchar|255|地址||
+|phone|varchar|11|电话||
+|career|varchar|255|职位||
+|created|datetime|0|创建时间||
+|exist|tinyint|1|是否存在|1：存在；0:不存在'|
+|operator|varchar|9|操作人||
+
+### bus_rent
+
+|字段|类型|长度|说明|备注|
+|:-----|:-----|:-----|:-----|:-----|
+|id|varchar|255|出租单号||
+|price|double|8,2|实际出租价格||
+|begin_time|date|0|起租时间||
+|return_time|date|0|预计还车时间||
+|real_time|datetime|0|实际还车时间||
+|rent_status|tinyint|1|出租状态|0：出租中；1：已归还|
+|customer_identity|varchar|255|客户身份证号||
+|car_number|varchar|10|车辆车牌||
+|operator|varchar|9|操作人||
+|created|datetime|0|创建时间||
+
+### sys_announcement
+
+|字段|类型|长度|说明|备注|
+|:-----|:-----|:-----|:-----|:-----|
+|id|int|9|ID||
+|title|varchar|255|标题||
+|content|longtext||内容||
+|created|datetime|0|创建时间||
+|operator|varchar|9|操作人||
+
+### sys_user
+
+|字段|类型|长度|说明|备注|
+|:-----|:-----|:-----|:-----|:-----|
+|username|varchar|9|用户名||
+|password|varchar|64|密码||
+|identity|varchar|18|身份证号||
+|name|varchar|32|姓名||
+|gender|tinyint|1|性别|0：未知，1：男，2：女|
+|address|varchar|255|家庭地址||
+|phone|varchar|11|电话||
+|position|varchar|255|职位||
+|type|tinyint|1|帐户类型|0：普通用户；1：管理员|
+
