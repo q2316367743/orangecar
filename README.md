@@ -43,6 +43,24 @@
             - 新增系统公告
             - 修改系统公告
 
+## 项目安装
+
+1. 创建数据库，执行[数据库文件](carrent.sql)
+2. 运行项目
+
+```shell script
+git clone https://gitee.com/qiaoshengda/orangecar
+cd orangecar
+mvn package
+cd target
+java -jar orangecar-1.0.jar
+```
+
+3. 访问网站<localhost:8080>
+4. 账号admin, 密码123456
+
+访问localhost:8080
+
 ## 相关技术栈
 
 - Springboot

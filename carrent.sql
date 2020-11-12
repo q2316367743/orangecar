@@ -133,4 +133,8 @@ CREATE TABLE `sys_user`  (
   PRIMARY KEY (`username`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
+insert into sys_user value ('admin','$2a$10$/NvtR/RRWl1L2aSkw2BYEuVbTI1ZBVsnUXuEo81.IqjZuGBg9ZAsu','100000000000000000','Esion',1,'湖北工程学院','13888888888','管理员',1);
+
 SET FOREIGN_KEY_CHECKS = 1;
+
+
