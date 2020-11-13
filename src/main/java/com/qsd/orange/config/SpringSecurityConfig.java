@@ -1,5 +1,6 @@
 package com.qsd.orange.config;
 
+import com.qsd.orange.security.AccessFailureHandler;
 import com.qsd.orange.security.LoginFailureHandler;
 import com.qsd.orange.security.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private LoginSuccessHandler loginSuccessHandler;
     @Autowired
     private LoginFailureHandler loginFailureHandler;
+    @Autowired
+    private AccessFailureHandler accessFailureHandler;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -62,6 +65,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //配置iframe请求
         http.headers().frameOptions().disable();
+
+        //处理认证失败请求
+        http.exceptionHandling().accessDeniedHandler(accessFailureHandler);
 
     }
 

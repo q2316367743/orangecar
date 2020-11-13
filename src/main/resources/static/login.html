@@ -17,8 +17,7 @@
         }
         
         body {
-            background: url(image/bg.jpg) no-repeat center 0px;
-            background-position: center 0;
+            background: url(/image/bg.jpg) no-repeat center 0;
             background-size: cover;
         }
     </style>
@@ -41,7 +40,7 @@
                         <input type="password" name="password" lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input">
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 4%;margin-bottom: 4%;">
+                <div class="layui-form-item" style="margin-top: 4%;margin-bottom: 4%;" pane>
                     <label class="layui-form-label">记住密码</label>
                     <div class="layui-input-block">
                         <input type="checkbox" name="rememberMe" lay-filter="rememberMe" value="1" lay-skin="switch" lay-text="是|否" checked>
@@ -91,7 +90,7 @@
             let password = data.field.password;
             $.post('user/login', {
                 username: username,
-                password: password
+                password: password,
             }, function (res){
                 if(res.code == 200){
                     location.href = './'

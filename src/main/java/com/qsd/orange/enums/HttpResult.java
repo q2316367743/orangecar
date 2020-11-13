@@ -8,6 +8,7 @@ package com.qsd.orange.enums;
 public enum HttpResult {
 
     SUCCESS(200, "成功"),
+    UN_AUTHORIZED(403, "权限错误"),
     NOT_FOUND(404, "资源未找到"),
     SERVER_ERROR(500, "服务器错误"),
     USERNAME_OR_PASSWORD_ERROR(501, "用户名或密码错误"),
