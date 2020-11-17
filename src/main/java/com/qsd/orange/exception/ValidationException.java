@@ -1,21 +1,13 @@
 package com.qsd.orange.exception;
 
-import com.baomidou.mybatisplus.extension.api.R;
-import com.qsd.orange.enums.HttpResult;
-import com.qsd.orange.vo.BaseVo;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.qsd.orange.global.HttpResult;
+import com.qsd.orange.global.R;
 import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.UnexpectedTypeException;
-import java.util.List;
 
 /**
  * @Author Esion
@@ -30,8 +22,8 @@ public class ValidationException {
             BindException.class,
             UnexpectedTypeException.class
     })
-    public BaseVo validation(){
-        return new BaseVo(HttpResult.PARAM_ERROR);
+    public R validation(){
+        return R.error(HttpResult.PARAM_ERROR);
     }
 
 }

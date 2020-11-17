@@ -1,17 +1,14 @@
 package com.qsd.orange.controller;
 
-import com.qsd.orange.enums.HttpResult;
+import com.qsd.orange.global.HttpResult;
+import com.qsd.orange.global.R;
 import com.qsd.orange.po.BusRent;
 import com.qsd.orange.service.RentService;
-import com.qsd.orange.vo.DataVo;
-import com.qsd.orange.vo.PageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 /**
  * @Author Esion
@@ -26,15 +23,15 @@ public class SystemRentController {
     private RentService rentService;
 
     @GetMapping("all")
-    public PageVo<BusRent> all(
+    public R all(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "9") Integer limit
     ){
-        return new PageVo<>(HttpResult.SUCCESS, rentService.sysAll(page, limit));
+        return R.success().page(rentService.sysAll(page, limit));
     }
 
     @GetMapping("search")
-    public PageVo<BusRent> search(
+    public R search(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "9") Integer limit,
             Integer status,
@@ -43,13 +40,13 @@ public class SystemRentController {
     ){
         switch (type){
             case 0:
-                return new PageVo<>(HttpResult.SUCCESS, rentService.sysSearch(page, limit, status, "id", keyword));
+                return R.success().page(rentService.sysSearch(page, limit, status, "id", keyword));
             case 1:
-                return new PageVo<>(HttpResult.SUCCESS, rentService.sysSearch(page, limit, status, "customer_identity", keyword));
+                return R.success().page(rentService.sysSearch(page, limit, status, "customer_identity", keyword));
             case 2:
-                return new PageVo<>(HttpResult.SUCCESS, rentService.sysSearch(page, limit, status, "car_number", keyword));
+                return R.success().page(rentService.sysSearch(page, limit, status, "car_number", keyword));
             default:
-                return new PageVo<>(HttpResult.PARAM_ERROR);
+                return R.error(HttpResult.PARAM_ERROR);
         }
     }
 

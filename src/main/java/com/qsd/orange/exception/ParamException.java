@@ -1,7 +1,7 @@
 package com.qsd.orange.exception;
 
-import com.qsd.orange.enums.HttpResult;
-import com.qsd.orange.vo.BaseVo;
+import com.qsd.orange.global.HttpResult;
+import com.qsd.orange.global.R;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ParamException {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public BaseVo missingServletRequestParameterException(MissingServletRequestParameterException e){
-        return new BaseVo(HttpResult.PARAM_LACK);
+    public R missingServletRequestParameterException(MissingServletRequestParameterException e){
+        return R.error(HttpResult.PARAM_LACK);
     }
 
 }

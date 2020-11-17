@@ -1,8 +1,7 @@
 package com.qsd.orange.security;
 
 import cn.hutool.json.JSONUtil;
-import com.qsd.orange.enums.HttpResult;
-import com.qsd.orange.vo.BaseVo;
+import com.qsd.orange.global.R;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException, ServletException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json;charset=utf-8");
-        response.getWriter().print(JSONUtil.toJsonStr(new BaseVo(HttpResult.SUCCESS)));
+        response.getWriter().print(JSONUtil.toJsonStr(R.success()));
     }
 
 }

@@ -1,19 +1,13 @@
 package com.qsd.orange.controller;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileWriter;
-import cn.hutool.core.util.StrUtil;
-import com.qsd.orange.enums.HttpResult;
-import com.qsd.orange.vo.BaseVo;
-import com.qsd.orange.vo.DataVo;
+import com.qsd.orange.global.R;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.stream.ImageInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +26,7 @@ public class SystemResourceController {
     public static final String IMAGE_PATH = "F:\\nginx\\nginx-image\\html";
 
     @PostMapping("image/add")
-    public DataVo<String> updateImage(MultipartFile file){
+    public R updateImage(MultipartFile file){
         String name = "temp";
         String temp = file.getName();
         System.out.println(temp);
@@ -44,9 +38,9 @@ public class SystemResourceController {
             IoUtil.copy(inputStream, outputStream);
         } catch (IOException e) {
             e.printStackTrace();
-            return new DataVo<>(HttpResult.SERVER_ERROR);
+            return R.error();
         }
-        return new DataVo<>(HttpResult.SUCCESS, name);
+        return R.success().data("image", name);
     }
 
 }

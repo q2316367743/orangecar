@@ -56,8 +56,15 @@
 							<dd><a layui-id="103" href="javascript:;">检查单管理</a></dd>
 							<dd><a layui-id="104" href="javascript:;">用户管理</a></dd>
 							<dd><a layui-id="105" href="javascript:;">系统公告</a></dd>
-							<dd><a layui-id="106" href="javascript:;">数据源监控</a></dd>
 					    </dl>
+					</li>
+					<li class="layui-nav-item" th:if="${type == 1}">
+						<a href="javascript:;">统计分析</a>
+						<dl class="layui-nav-child">
+							<dd><a layui-id="201" href="javascript:;">客户地区统计</a></dd>
+							<dd><a layui-id="202" href="javascript:;">公司年度月份销售额</a></dd>
+							<dd><a layui-id="203" href="javascript:;">业务员年度销售额</a></dd>
+						</dl>
 					</li>
 					<li class="layui-nav-item"><a layui-id="07" href="javascript:;">个人中心</a></li>
 					<li class="layui-nav-item"><a layui-id="08" href="javascript:;">关于</a></li>
@@ -72,7 +79,7 @@
 					marginheight=”0″
 					scrolling=”no”
 					allowtransparency=”yes”
-					src="home" height="100%" width="100%"></iframe>
+					src="home.html" height="100%" width="100%"></iframe>
         </div>
     </div>
     <script type="text/javascript">
@@ -88,10 +95,9 @@
 			let element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
 			let layer = layui.layer;
 			element.on('nav(base)', function(elem){
-				clickElement = elem;
 				var id = $(this).attr('layui-id');
 				if(id == '01'){
-					$("#body").attr('src', 'home');
+					$("#body").attr('src', 'home.html');
 				}else if(id == '02'){
 					$("#body").attr('src', 'customer.html');
 				}else if(id == '03'){
@@ -117,7 +123,13 @@
 				}else if(id == '105'){
 					$("#body").attr('src', 'system/announcement.html');
 				}else if(id == '106'){
-					$("#body").attr('src', 'system/datasource');
+					$("#body").attr('src', 'system/actuator.html');
+				}else if(id == '201'){
+					$("#body").attr('src', 'statistics/region.html');
+				}else if(id == '202'){
+					$("#body").attr('src', 'statistics/company.html');
+				}else if(id == '203'){
+					$("#body").attr('src', 'statistics/salesman.html');
 				}
 			});
 			document.getElementById('body').onload = function(){

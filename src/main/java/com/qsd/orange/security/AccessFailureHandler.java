@@ -1,8 +1,8 @@
 package com.qsd.orange.security;
 
 import cn.hutool.json.JSONUtil;
-import com.qsd.orange.enums.HttpResult;
-import com.qsd.orange.vo.BaseVo;
+import com.qsd.orange.global.HttpResult;
+import com.qsd.orange.global.R;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class AccessFailureHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         accessDeniedException.printStackTrace();
         response.setHeader("Content-Type", "application/json;charset=utf-8");
-        response.getWriter().print(JSONUtil.parseObj(new BaseVo(HttpResult.UN_AUTHORIZED)).toJSONString(4));
+        response.getWriter().print(JSONUtil.parseObj(R.error(HttpResult.UN_AUTHORIZED)).toJSONString(4));
     }
     
 }

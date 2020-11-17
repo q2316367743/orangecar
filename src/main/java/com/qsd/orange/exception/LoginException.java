@@ -1,8 +1,7 @@
 package com.qsd.orange.exception;
 
-import cn.hutool.core.date.DateException;
-import com.qsd.orange.enums.HttpResult;
-import com.qsd.orange.vo.BaseVo;
+import com.qsd.orange.global.HttpResult;
+import com.qsd.orange.global.R;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,8 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class LoginException {
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public BaseVo usernameNotFoundException(){
-        return new BaseVo(HttpResult.USERNAME_OR_PASSWORD_ERROR);
+    public R usernameNotFoundException(){
+        return R.error(HttpResult.USERNAME_OR_PASSWORD_ERROR);
     }
 
 }

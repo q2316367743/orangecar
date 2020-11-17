@@ -29,11 +29,6 @@ public class RouteController {
         return "index";
     }
 
-    @GetMapping("home")
-    public String home(){
-        return "home";
-    }
-
     @GetMapping("self")
     public String self(Model model, Authentication authentication){
         User users = (User)authentication.getPrincipal();

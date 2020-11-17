@@ -1,13 +1,8 @@
 package com.qsd.orange.controller;
-import java.sql.Timestamp;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.qsd.orange.enums.HttpResult;
 import com.qsd.orange.po.BusCustomer;
 import com.qsd.orange.service.CustomerService;
-import com.qsd.orange.vo.BaseVo;
-import com.qsd.orange.vo.DataVo;
-import com.qsd.orange.vo.PageVo;
+import com.qsd.orange.global.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -28,51 +23,46 @@ public class CustomerController {
     private CustomerService customerService;
 
     @GetMapping("all")
-    public PageVo<BusCustomer> all(
+    public R all(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "9") Integer limit
     ){
-        IPage<BusCustomer> customers = customerService.queryCustomers(page, limit);
-        return new PageVo<>(HttpResult.SUCCESS, customers);
+        return R.success().page(customerService.queryCustomers(page, limit));
     }
 
     @GetMapping("search/identity")
-    public PageVo<BusCustomer> searchByIdentity(
+    public R searchByIdentity(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "9") Integer limit,
             String keyword
     ){
-        IPage<BusCustomer> customers = customerService.queryByCustomer(page, limit, "identity", keyword);
-        return new PageVo<>(HttpResult.SUCCESS, customers);
+        return R.success().page(customerService.queryByCustomer(page, limit, "identity", keyword));
     }
 
     @GetMapping("search/name")
-    public PageVo<BusCustomer> searchByName(
+    public R searchByName(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "9") Integer limit,
             String keyword
     ){
-        IPage<BusCustomer> customers = customerService.queryByCustomer(page, limit, "name", keyword);
-        return new PageVo<>(HttpResult.SUCCESS, customers);
+        return R.success().page(customerService.queryByCustomer(page, limit, "name", keyword));
     }
 
     @GetMapping("search/one/identity")
-    public DataVo<BusCustomer> searchOneIdentity(String identity){
-        BusCustomer customer = customerService.queryOne(identity);
-        return new DataVo<>(customer != null ? HttpResult.SUCCESS : HttpResult.NOT_FOUND, customer);
+    public R searchOneIdentity(String identity){
+        return R.success().data("item", customerService.queryOne(identity));
     }
 
     @PostMapping("add")
-    public BaseVo add(@Valid BusCustomer customer, Authentication authentication){
+    public R add(@Valid BusCustomer customer, Authentication authentication){
         User user = (User)authentication.getPrincipal();
         String username = user.getUsername();
-        int insert = customerService.addCustomer(username, customer);
-        return new BaseVo(insert > 0 ? HttpResult.SUCCESS : HttpResult.SERVER_ERROR);
+        return R.choose(customerService.addCustomer(username, customer) > 0);
     }
 
     @PostMapping("update")
-    public BaseVo update(@Valid BusCustomer customer){
-        return new BaseVo(customerService.updateCustomer(customer) > 0 ? HttpResult.SUCCESS : HttpResult.SERVER_ERROR);
+    public R update(@Valid BusCustomer customer){
+        return R.choose(customerService.updateCustomer(customer) > 0);
     }
 
 }

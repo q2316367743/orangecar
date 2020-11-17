@@ -127,11 +127,15 @@
                 {fixed: 'right', title:'操作', toolbar: '#rightBar', width:200}
             ]],
             response: {
-                statusName: 'code', //规定数据状态的字段名称，默认：code
                 statusCode: 200, //规定成功的状态码，默认：0
-                msgName: 'message', //规定状态信息的字段名称，默认：msg
-                countName: 'total', //规定数据总数的字段名称，默认：count
-                dataName: 'record', //规定数据列表的字段名称，默认：data
+            },
+            parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.data.record //解析数据列表
+                };
             }
         });
         //头工具栏事件

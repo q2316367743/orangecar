@@ -63,7 +63,7 @@ CREATE TABLE `bus_check`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `bus_customer`;
 CREATE TABLE `bus_customer`  (
-  `identity` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '身份证号',
+  `identity` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '身份证号',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `gender` tinyint(1) NULL DEFAULT 0 COMMENT '性别',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '地址',
@@ -82,13 +82,13 @@ CREATE TABLE `bus_customer`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `bus_rent`;
 CREATE TABLE `bus_rent`  (
-  `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '出租单号',
+  `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '出租单号',
   `price` double(8, 2) NULL DEFAULT NULL COMMENT '实际出租价格',
   `begin_time` date NULL DEFAULT NULL COMMENT '开始时间',
   `return_time` date NULL DEFAULT NULL COMMENT '还车时间',
   `real_time` datetime(0) NULL DEFAULT NULL COMMENT '实际还车时间',
   `rent_status` tinyint(1) NULL DEFAULT NULL COMMENT '出租状态：0：出租中；1：已归还',
-  `customer_identity` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '客户身份证号',
+  `customer_identity` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '客户身份证号',
   `car_number` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '汽车车牌',
   `operator` varchar(9) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作人员',
   `created` datetime(0) NULL DEFAULT NULL COMMENT '录入时间',

@@ -1,8 +1,7 @@
 package com.qsd.orange.controller;
 
-import com.qsd.orange.enums.HttpResult;
 import com.qsd.orange.service.CheckService;
-import com.qsd.orange.vo.BaseVo;
+import com.qsd.orange.global.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -24,7 +23,7 @@ public class CheckController {
     private CheckService checkService;
 
     @PostMapping("add")
-    public BaseVo add(
+    public R add(
             String id,
             @RequestParam(value = "problem", required = false, defaultValue = "无") String problem,
             @RequestParam(value = "compensate", required = false, defaultValue = "0") Double compensate,
@@ -32,8 +31,7 @@ public class CheckController {
             Authentication authentication
     ){
         User users = (User)authentication.getPrincipal();
-        int add = checkService.add(id, problem, compensate, description, users.getUsername());
-        return new BaseVo(add > 0 ? HttpResult.SUCCESS : HttpResult.SERVER_ERROR);
+        return R.choose(checkService.add(id, problem, compensate, description, users.getUsername()) > 0);
     }
 
 }

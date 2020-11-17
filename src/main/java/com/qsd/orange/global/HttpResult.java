@@ -1,8 +1,8 @@
-package com.qsd.orange.enums;
+package com.qsd.orange.global;
 
 /**
  * @Author Esion
- * @Date 2020/9/23 19:01
+ * @Date 2020/11/17 17:58
  * @Version 1.0
  */
 public enum HttpResult {

@@ -12,7 +12,7 @@
 	<groupId>com.qsd</groupId>
 	<artifactId>orangecar</artifactId>
 	<version>1.0</version>
-	<name>demo</name>
+	<name>orange_car</name>
 	<description>橘子汽车出租系统</description>
 
 	<properties>
@@ -35,10 +35,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 
@@ -46,11 +42,6 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>1.1.22</version>
 		</dependency>
 		<dependency>
 			<groupId>com.baomidou</groupId>
@@ -68,6 +59,7 @@
 			<artifactId>hutool-all</artifactId>
 			<version>5.4.2</version>
 		</dependency>
+		<!-- 权限 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -83,12 +75,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
 	<build>
