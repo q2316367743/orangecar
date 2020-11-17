@@ -4,11 +4,73 @@
     <meta charset="UTF-8">
     <title>客户地区统计</title>
     <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
-    <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+    <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css'/>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/echarts/4.8.0/echarts.min.js"></script>
 </head>
-<body>
-
+<body style="background-color: #F2F2F2">
+<div class="layui-row">
+    <div class="layui-row" style="margin: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-body layui-row">
+                <div id="container" style="height: 500px"></div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script type="text/javascript">
+    let dom = document.getElementById("container");
+    let myChart = echarts.init(dom);
+    option = null;
+    option = {
+        title: {
+            text: '汽车管理系统客户地址统计',
+            subtext: '真实有效',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: []
+        },
+        series: [
+            {
+                name: '访问来源',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: [],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    //获取数据
+    $.getJSON('./region', function (res){
+        if(res.success){
+            //表头
+            let data = [];
+            for (let i = 0; i < res.data.items.length; i++){
+                data.push(res.data.items[i].name);
+            }
+            option.legend.data = data;
+            option.series[0].data = res.data.items;
+            //生成表格
+            if (option && typeof option === "object") {
+                console.log(JSON.stringify(option))
+                myChart.setOption(option, true);
+            }
+        }
+    })
+</script>
 </html>
