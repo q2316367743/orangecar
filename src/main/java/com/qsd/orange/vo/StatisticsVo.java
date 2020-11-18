@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @Date 2020/11/17 19:55
  * @Version 1.0
  */
-public class RegionVo implements Serializable {
+public class StatisticsVo implements Serializable {
 
     private String name;
     private Integer value;

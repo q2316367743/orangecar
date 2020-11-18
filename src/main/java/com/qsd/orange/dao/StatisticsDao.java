@@ -1,7 +1,8 @@
 package com.qsd.orange.dao;
 
-import com.qsd.orange.vo.RegionVo;
+import com.qsd.orange.vo.StatisticsVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,6 +17,12 @@ public interface StatisticsDao {
     /**
      * 获取地区统计
      * */
-    List<RegionVo> getRegionVo();
+    List<StatisticsVo> getRegionVo();
+    /**
+     * 业务员年度销售额
+     * @param year 年份
+     * */
+    List<StatisticsVo> getSalesman(@Param("year") String year);
 
+    List<Integer> getCompany(@Param("year") String year);
 }

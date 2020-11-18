@@ -4,11 +4,113 @@
     <meta charset="UTF-8">
     <title>业务员年度销售额</title>
     <script type='text/javascript' charset='utf-8' src='https://www.layuicdn.com/layui-v2.5.6/layui.js'></script>
-    <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css' />
+    <link rel='stylesheet' type='text/css' href='https://www.layuicdn.com/layui-v2.5.6/css/layui.css'/>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/echarts/4.8.0/echarts.min.js"></script>
 </head>
-<body>
-
+<body style="background-color: #F2F2F2">
+<div class="layui-row">
+    <div class="layui-row" style="margin: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-body layui-row">
+                <!-- 年份 -->
+                <div class="layui-card-header layui-row">
+                    <div class="layui-col-xs-offset4 layui-col-xs4 layui-form">
+                        <div class="layui-col-xs8">
+                            <input type="text" class="layui-input" id="year" placeholder="">
+                        </div>
+                        <div class="layui-col-xs4">
+                            <button class="layui-btn" id="search" style="margin-bottom: 7px;margin-left: 2px;">搜索</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 图表 -->
+                <div id="container" style="height: 500px"></div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script type="text/javascript">
+    let dom = document.getElementById("container");
+    let myChart = echarts.init(dom);
+    let option = {
+        color: ['#3398DB'],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: [],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '销售额',
+                type: 'bar',
+                barWidth: '60%',
+                data: []
+            }
+        ]
+    };
+
+    function getData(year) {
+        //获取数据
+        $.getJSON(`./salesman/${year}`, function (res) {
+            if (res.success) {
+                //表头
+                let names = [];
+                let values = [];
+                for (let i = 0; i < res.data.items.length; i++) {
+                    names.push(res.data.items[i].name);
+                    values.push(res.data.items[i].value);
+                }
+                option.xAxis[0].data = names;
+                option.series[0].data = values;
+                //生成表格
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+            }
+        })
+    }
+
+    let year = new Date().getFullYear();
+
+    getData(year);
+
+    $("#search").click(function () {
+        let year = $("#year").val();
+        getData(year);
+    });
+
+    layui.use('laydate', function() {
+        let laydate = layui.laydate;
+        $("#year").attr('placeholder', year);
+        //年选择器
+        laydate.render({
+            elem: '#year',
+            type: 'year'
+        });
+    });
+
+</script>
 </html>

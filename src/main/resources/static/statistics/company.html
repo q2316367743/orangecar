@@ -8,7 +8,78 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/echarts/4.8.0/echarts.min.js"></script>
 </head>
-<body>
-
+<body style="background-color: #F2F2F2">
+<div class="layui-row">
+    <div class="layui-row" style="margin: 20px;">
+        <div class="layui-card">
+            <div class="layui-card-body layui-row">
+                <!-- 年份 -->
+                <div class="layui-card-header layui-row">
+                    <div class="layui-col-xs-offset4 layui-col-xs4 layui-form">
+                        <div class="layui-col-xs8">
+                            <input type="text" class="layui-input" id="year" placeholder="">
+                        </div>
+                        <div class="layui-col-xs4">
+                            <button class="layui-btn" id="search" style="margin-bottom: 7px;margin-left: 2px;">搜索</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 图表 -->
+                <div id="container" style="height: 500px"></div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script type="text/javascript">
+    let dom = document.getElementById("container");
+    let myChart = echarts.init(dom);
+    let option = {
+        xAxis: {
+            type: 'category',
+            data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: [],
+            type: 'line'
+        }]
+    };
+
+    function getData(year) {
+        //获取数据
+        $.getJSON(`./company/${year}`, function (res) {
+            if (res.success) {
+                //表头
+                option.series[0].data = res.data.items;
+                //生成表格
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+            }
+        })
+    }
+
+    let year = new Date().getFullYear();
+
+    getData(year);
+
+    $("#search").click(function () {
+        let year = $("#year").val();
+        getData(year);
+    });
+
+    layui.use('laydate', function() {
+        let laydate = layui.laydate;
+        $("#year").attr('placeholder', year);
+        //年选择器
+        laydate.render({
+            elem: '#year',
+            type: 'year'
+        });
+    });
+
+</script>
 </html>
