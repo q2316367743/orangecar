@@ -1,9 +1,11 @@
 # 橘子汽车出租系统
 
-> 本项目采用springboot
+> 参考视频：[基于SSM+layui的汽车出租项目](https://www.bilibili.com/video/BV1d4411r7vn)  
+> 真正的大师永远保持着一颗学徒的心
 
-学习视频：[基于SSM+layui的汽车出租项目](https://www.bilibili.com/video/BV1d4411r7vn)  
-真正的大师永远保持着一颗学徒的心
+本项目采用springboot
+
+**注**：本项目只是参考视频想法后进行实现，故项目与视频除功能外差距过大
 
 ## 功能说明
 
@@ -42,6 +44,10 @@
         - 系统公告
             - 新增系统公告
             - 修改系统公告
+    - 数据统计
+        - 客户地区统计
+        - 业务员销售统计
+        - 公司营收统计
 
 ## 项目安装
 
@@ -105,7 +111,7 @@ java -jar orangecar-1.0.jar
 
 |字段|类型|长度|说明|备注|
 |:-----|:-----|:-----|:-----|:-----|
-|identity|varchar|255|身份证号||
+|identity|varchar|18|身份证号||
 |name|varchar|255|姓名||
 |gender|tinyint|1|性别|0：未知，1：男，2：女|
 |address|varchar|255|地址||
@@ -119,7 +125,7 @@ java -jar orangecar-1.0.jar
 
 |字段|类型|长度|说明|备注|
 |:-----|:-----|:-----|:-----|:-----|
-|id|varchar|255|出租单号||
+|id|varchar|64|出租单号||
 |price|double|8,2|实际出租价格||
 |begin_time|date|0|起租时间||
 |return_time|date|0|预计还车时间||
