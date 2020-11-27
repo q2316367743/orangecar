@@ -5,7 +5,7 @@ spring:
   application:
     name: orangecar
   datasource:
-    url: jdbc:mysql://10.102.1.121:3306/carrent?serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.40.156:3306/carrent?serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
