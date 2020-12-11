@@ -79,6 +79,8 @@ java -jar orangecar-1.0.jar
 
 > 数据库文件：[carrent.sql](carrent.sql)
 
+==数据库版本建议**MySQL8.0**以上或**MariaDB10.0**以上==
+
 ### bus_car
 
 |字段|类型|长度|说明|备注|

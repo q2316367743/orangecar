@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public SysUser getInfo(String username) {
-        return userDao.selectById(username);
+        return userDao.selectOneById(username);
     }
 
     @Override

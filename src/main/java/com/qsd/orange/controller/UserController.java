@@ -7,6 +7,7 @@ import com.qsd.orange.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,14 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @PostMapping("info")
+    public R info(Authentication authentication){
+        User users = (User)authentication.getPrincipal();
+        String username = users.getUsername();
+        SysUser info = userService.getInfo(username);
+        return R.success().data("item", info);
+    }
 
     @PostMapping("update/info")
     public R updateInfo(SysUser user, Authentication authentication){
